@@ -1,0 +1,417 @@
+import React, { useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ComposedChart, Line, Area, Legend } from 'recharts';
+
+// Overall arrival data
+const overallData = [
+  {"time": "17:00", "percent": 6.0, "count": 526},
+  {"time": "17:30", "percent": 7.1, "count": 628},
+  {"time": "18:00", "percent": 8.8, "count": 778},
+  {"time": "18:30", "percent": 10.1, "count": 891},
+  {"time": "19:00", "percent": 10.5, "count": 927},
+  {"time": "19:30", "percent": 9.7, "count": 855},
+  {"time": "20:00", "percent": 9.1, "count": 800},
+  {"time": "20:30", "percent": 8.5, "count": 744},
+  {"time": "21:00", "percent": 8.0, "count": 704},
+  {"time": "21:30", "percent": 6.5, "count": 576},
+  {"time": "22:00", "percent": 4.9, "count": 433},
+  {"time": "22:30", "percent": 3.3, "count": 288},
+  {"time": "23:00", "percent": 2.0, "count": 178},
+  {"time": "23:30", "percent": 1.4, "count": 126}
+];
+
+// Daily arrival data
+const dayData = [
+  {"day": "Monday", "dayThai": "จันทร์", "peakTime": "19:30", "peakPercent": 13.2, "slots": [
+    {"time": "17:00", "percent": 5.2}, {"time": "17:30", "percent": 7.5}, {"time": "18:00", "percent": 10.1}, {"time": "18:30", "percent": 11.4},
+    {"time": "19:00", "percent": 11.0}, {"time": "19:30", "percent": 13.2}, {"time": "20:00", "percent": 8.2}, {"time": "20:30", "percent": 9.3},
+    {"time": "21:00", "percent": 7.5}, {"time": "21:30", "percent": 5.6}, {"time": "22:00", "percent": 3.7}, {"time": "22:30", "percent": 2.8},
+    {"time": "23:00", "percent": 0.8}, {"time": "23:30", "percent": 1.0}
+  ]},
+  {"day": "Tuesday", "dayThai": "อังคาร", "peakTime": "18:30", "peakPercent": 11.2, "slots": [
+    {"time": "17:00", "percent": 6.6}, {"time": "17:30", "percent": 7.2}, {"time": "18:00", "percent": 9.9}, {"time": "18:30", "percent": 11.2},
+    {"time": "19:00", "percent": 9.9}, {"time": "19:30", "percent": 9.6}, {"time": "20:00", "percent": 8.6}, {"time": "20:30", "percent": 8.7},
+    {"time": "21:00", "percent": 7.9}, {"time": "21:30", "percent": 6.9}, {"time": "22:00", "percent": 3.7}, {"time": "22:30", "percent": 3.7},
+    {"time": "23:00", "percent": 0.9}, {"time": "23:30", "percent": 1.2}
+  ]},
+  {"day": "Wednesday", "dayThai": "พุธ", "peakTime": "17:30", "peakPercent": 12.4, "slots": [
+    {"time": "17:00", "percent": 9.5}, {"time": "17:30", "percent": 12.4}, {"time": "18:00", "percent": 11.1}, {"time": "18:30", "percent": 11.7},
+    {"time": "19:00", "percent": 10.1}, {"time": "19:30", "percent": 7.7}, {"time": "20:00", "percent": 7.6}, {"time": "20:30", "percent": 7.4},
+    {"time": "21:00", "percent": 5.8}, {"time": "21:30", "percent": 4.9}, {"time": "22:00", "percent": 4.9}, {"time": "22:30", "percent": 1.4},
+    {"time": "23:00", "percent": 2.2}, {"time": "23:30", "percent": 1.4}
+  ]},
+  {"day": "Thursday", "dayThai": "พฤหัสบดี", "peakTime": "18:30", "peakPercent": 10.7, "slots": [
+    {"time": "17:00", "percent": 5.5}, {"time": "17:30", "percent": 7.6}, {"time": "18:00", "percent": 10.1}, {"time": "18:30", "percent": 10.7},
+    {"time": "19:00", "percent": 9.4}, {"time": "19:30", "percent": 8.1}, {"time": "20:00", "percent": 8.9}, {"time": "20:30", "percent": 9.1},
+    {"time": "21:00", "percent": 8.9}, {"time": "21:30", "percent": 6.2}, {"time": "22:00", "percent": 4.7}, {"time": "22:30", "percent": 3.3},
+    {"time": "23:00", "percent": 1.9}, {"time": "23:30", "percent": 2.0}
+  ]},
+  {"day": "Friday", "dayThai": "ศุกร์", "peakTime": "19:00", "peakPercent": 12.3, "slots": [
+    {"time": "17:00", "percent": 5.0}, {"time": "17:30", "percent": 5.6}, {"time": "18:00", "percent": 6.8}, {"time": "18:30", "percent": 9.4},
+    {"time": "19:00", "percent": 12.3}, {"time": "19:30", "percent": 9.4}, {"time": "20:00", "percent": 9.8}, {"time": "20:30", "percent": 9.4},
+    {"time": "21:00", "percent": 8.9}, {"time": "21:30", "percent": 7.8}, {"time": "22:00", "percent": 5.3}, {"time": "22:30", "percent": 3.4},
+    {"time": "23:00", "percent": 2.5}, {"time": "23:30", "percent": 1.2}
+  ]},
+  {"day": "Saturday", "dayThai": "เสาร์", "peakTime": "20:00", "peakPercent": 10.7, "slots": [
+    {"time": "17:00", "percent": 5.0}, {"time": "17:30", "percent": 5.5}, {"time": "18:00", "percent": 9.1}, {"time": "18:30", "percent": 8.8},
+    {"time": "19:00", "percent": 9.9}, {"time": "19:30", "percent": 9.8}, {"time": "20:00", "percent": 10.7}, {"time": "20:30", "percent": 8.0},
+    {"time": "21:00", "percent": 8.1}, {"time": "21:30", "percent": 7.1}, {"time": "22:00", "percent": 5.2}, {"time": "22:30", "percent": 3.5},
+    {"time": "23:00", "percent": 2.1}, {"time": "23:30", "percent": 1.9}
+  ]},
+  {"day": "Sunday", "dayThai": "อาทิตย์", "peakTime": "19:30", "peakPercent": 11.1, "slots": [
+    {"time": "17:00", "percent": 6.4}, {"time": "17:30", "percent": 6.7}, {"time": "18:00", "percent": 6.8}, {"time": "18:30", "percent": 9.7},
+    {"time": "19:00", "percent": 10.3}, {"time": "19:30", "percent": 11.1}, {"time": "20:00", "percent": 7.9}, {"time": "20:30", "percent": 7.2},
+    {"time": "21:00", "percent": 7.8}, {"time": "21:30", "percent": 5.8}, {"time": "22:00", "percent": 5.7}, {"time": "22:30", "percent": 4.3},
+    {"time": "23:00", "percent": 2.7}, {"time": "23:30", "percent": 1.2}
+  ]}
+];
+
+// Music schedule
+const musicSchedule = {
+  Monday: { start: "19:00", end: "21:30" },
+  Tuesday: { start: "19:00", end: "21:30" },
+  Wednesday: { start: "19:00", end: "21:30" },
+  Thursday: { start: "19:00", end: "22:30" },
+  Friday: { start: "19:00", end: "23:30" },
+  Saturday: { start: "19:30", end: "23:30" },
+  Sunday: { start: "19:00", end: "21:00" }
+};
+
+const getBarColor = (percent, isPeak) => {
+  if (isPeak) return '#F59E0B'; // Peak = amber
+  if (percent >= 10) return '#22C55E'; // High = green
+  if (percent >= 7) return '#3B82F6'; // Medium = blue
+  if (percent >= 4) return '#8B5CF6'; // Low-medium = purple
+  return '#94A3B8'; // Low = gray
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
+        <p className="font-bold text-gray-800">{label}</p>
+        <p className="text-blue-600 text-lg font-bold">{data.percent}%</p>
+        {data.count && <p className="text-gray-500 text-sm">{data.count.toLocaleString()} บิล</p>}
+      </div>
+    );
+  }
+  return null;
+};
+
+// Overall Chart Component
+const OverallArrivalChart = () => {
+  const maxPercent = Math.max(...overallData.map(d => d.percent));
+  const dataWithPeak = overallData.map(d => ({
+    ...d,
+    isPeak: d.percent === maxPercent
+  }));
+
+  return (
+    <div className="bg-white rounded-lg p-4 shadow-md">
+      <h3 className="text-lg font-bold text-gray-800 mb-1">ภาพรวมทุกวัน - ลูกค้าเข้าร้านช่วงไหนเยอะสุด?</h3>
+      <p className="text-sm text-gray-500 mb-3">ข้อมูลจาก 8,802 บิล (ก.พ. 2025 - ม.ค. 2026)</p>
+      
+      <div className="h-72">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={dataWithPeak} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+            <XAxis 
+              dataKey="time" 
+              tick={{ fontSize: 11 }}
+              interval={0}
+              angle={-45}
+              textAnchor="end"
+              height={50}
+            />
+            <YAxis 
+              tick={{ fontSize: 11 }}
+              tickFormatter={(v) => `${v}%`}
+              domain={[0, 12]}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Bar dataKey="percent" radius={[4, 4, 0, 0]}>
+              {dataWithPeak.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={getBarColor(entry.percent, entry.isPeak)} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      
+      {/* Legend */}
+      <div className="flex flex-wrap gap-4 mt-3 text-sm justify-center">
+        <div className="flex items-center gap-1">
+          <div className="w-4 h-4 rounded" style={{backgroundColor: '#F59E0B'}}></div>
+          <span>Peak (10.5%)</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-4 h-4 rounded" style={{backgroundColor: '#22C55E'}}></div>
+          <span>สูง (≥10%)</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-4 h-4 rounded" style={{backgroundColor: '#3B82F6'}}></div>
+          <span>ปานกลาง (7-10%)</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-4 h-4 rounded" style={{backgroundColor: '#8B5CF6'}}></div>
+          <span>ต่ำ-กลาง (4-7%)</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-4 h-4 rounded" style={{backgroundColor: '#94A3B8'}}></div>
+          <span>ต่ำ (&lt;4%)</span>
+        </div>
+      </div>
+      
+      {/* Key insight */}
+      <div className="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
+        <p className="text-amber-800 font-medium">
+          🎯 <strong>Peak: 19:00</strong> (10.5%) — ช่วง 18:30-20:00 มีลูกค้าเข้าเยอะที่สุด รวม 29.7%
+        </p>
+      </div>
+    </div>
+  );
+};
+
+// Daily Chart Component  
+const DailyArrivalChart = ({ data, showMusic }) => {
+  const maxPercent = Math.max(...data.slots.map(d => d.percent));
+  const music = musicSchedule[data.day];
+  
+  const chartData = data.slots.map(d => ({
+    ...d,
+    isPeak: d.percent === maxPercent,
+    inMusic: showMusic && d.time >= music.start && d.time < music.end
+  }));
+
+  return (
+    <div className="bg-white rounded-lg p-4 shadow-md">
+      <div className="flex justify-between items-start mb-2">
+        <div>
+          <h3 className="text-lg font-bold text-gray-800">{data.dayThai}</h3>
+          {showMusic && (
+            <p className="text-xs text-orange-600">🎵 วงเล่น {music.start}-{music.end}</p>
+          )}
+        </div>
+        <div className="text-right">
+          <span className="inline-block px-2 py-1 bg-amber-100 text-amber-800 rounded text-sm font-bold">
+            Peak: {data.peakTime}
+          </span>
+          <p className="text-xs text-gray-500 mt-1">{data.peakPercent}%</p>
+        </div>
+      </div>
+      
+      <div className="h-44">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} margin={{ top: 10, right: 5, left: -15, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+            <XAxis 
+              dataKey="time" 
+              tick={{ fontSize: 9 }}
+              interval={1}
+              angle={-45}
+              textAnchor="end"
+              height={40}
+            />
+            <YAxis 
+              tick={{ fontSize: 9 }}
+              tickFormatter={(v) => `${v}%`}
+              domain={[0, 14]}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Bar dataKey="percent" radius={[3, 3, 0, 0]}>
+              {chartData.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={getBarColor(entry.percent, entry.isPeak)}
+                  stroke={entry.inMusic ? '#F97316' : 'none'}
+                  strokeWidth={entry.inMusic ? 2 : 0}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+
+// Comparison Table
+const ComparisonTable = () => {
+  const timeSlots = ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"];
+  
+  const getCellStyle = (percent, isPeak) => {
+    if (isPeak) return 'bg-amber-400 text-amber-900 font-bold';
+    if (percent >= 10) return 'bg-green-200 text-green-800';
+    if (percent >= 7) return 'bg-blue-100 text-blue-800';
+    if (percent >= 4) return 'bg-purple-50 text-purple-700';
+    return 'bg-gray-50 text-gray-500';
+  };
+
+  return (
+    <div className="bg-white rounded-lg p-4 shadow-md overflow-x-auto">
+      <h3 className="text-lg font-bold text-gray-800 mb-3">ตารางเปรียบเทียบ % ลูกค้าเข้าร้าน</h3>
+      
+      <table className="w-full text-xs">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="p-2 text-left sticky left-0 bg-gray-100">เวลา</th>
+            {dayData.map(d => (
+              <th key={d.day} className="p-2 text-center min-w-16">{d.dayThai}</th>
+            ))}
+            <th className="p-2 text-center min-w-16 bg-gray-200">รวม</th>
+          </tr>
+        </thead>
+        <tbody>
+          {timeSlots.map((time, i) => (
+            <tr key={time} className="border-b">
+              <td className="p-2 font-medium sticky left-0 bg-white">{time}</td>
+              {dayData.map(d => {
+                const slot = d.slots.find(s => s.time === time);
+                const isPeak = d.peakTime === time;
+                return (
+                  <td key={d.day} className={`p-2 text-center ${getCellStyle(slot?.percent || 0, isPeak)}`}>
+                    {slot?.percent || 0}%
+                  </td>
+                );
+              })}
+              <td className={`p-2 text-center font-medium ${getCellStyle(overallData[i]?.percent || 0, overallData[i]?.percent === 10.5)}`}>
+                {overallData[i]?.percent || 0}%
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      
+      <div className="mt-3 text-xs text-gray-500">
+        <span className="inline-block w-3 h-3 bg-amber-400 rounded mr-1"></span> Peak ของวันนั้น
+      </div>
+    </div>
+  );
+};
+
+// Key Insights
+const KeyInsights = () => (
+  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 shadow-md">
+    <h3 className="text-lg font-bold text-indigo-800 mb-3">📊 สรุปข้อมูลสำคัญ</h3>
+    
+    <div className="space-y-3">
+      <div className="bg-white rounded p-3">
+        <h4 className="font-bold text-gray-800 mb-2">🎯 Peak Time แต่ละวัน</h4>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          {dayData.map(d => (
+            <div key={d.day} className="flex justify-between">
+              <span className="text-gray-600">{d.dayThai}:</span>
+              <span className="font-bold text-amber-600">{d.peakTime} ({d.peakPercent}%)</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="bg-white rounded p-3">
+        <h4 className="font-bold text-gray-800 mb-2">⏰ ช่วงเวลาที่ลูกค้าเข้าเยอะ (รวมทุกวัน)</h4>
+        <ul className="text-sm space-y-1">
+          <li className="flex justify-between">
+            <span>18:00-20:00</span>
+            <span className="font-bold text-green-600">38.2%</span>
+          </li>
+          <li className="flex justify-between">
+            <span>18:30-19:30</span>
+            <span className="font-bold text-green-600">20.2%</span>
+          </li>
+          <li className="flex justify-between">
+            <span>หลัง 21:30</span>
+            <span className="font-bold text-red-500">ลดลงอย่างต่อเนื่อง</span>
+          </li>
+        </ul>
+      </div>
+      
+      <div className="bg-amber-50 rounded p-3 border border-amber-200">
+        <h4 className="font-bold text-amber-800 mb-1">💡 Insight สำหรับวงดนตรี</h4>
+        <p className="text-sm text-amber-700">
+          วงเริ่ม 19:00 → ลูกค้าเพิ่งเข้ามา (18:30-19:00 คือ peak arrival)<br/>
+          แนะนำ: <strong>เริ่ม 19:30</strong> จะได้ audience ที่พร้อมฟังมากกว่า
+        </p>
+      </div>
+    </div>
+  </div>
+);
+
+export default function ArrivalAnalysisDashboard() {
+  const [showMusic, setShowMusic] = useState(true);
+  const [viewMode, setViewMode] = useState('all'); // 'all', 'weekday', 'weekend'
+  
+  const filteredDays = viewMode === 'weekday' 
+    ? dayData.slice(0, 4) 
+    : viewMode === 'weekend' 
+    ? dayData.slice(4) 
+    : dayData;
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg p-4 mb-4 text-white shadow-lg">
+          <h1 className="text-2xl font-bold">📈 12 Plato - วิเคราะห์เวลาลูกค้าเข้าร้าน</h1>
+          <p className="text-indigo-100">แบ่งทุก 30 นาที ตั้งแต่ 17:00-24:00</p>
+        </div>
+        
+        {/* Controls */}
+        <div className="flex flex-wrap gap-3 mb-4">
+          <div className="bg-white rounded-lg p-2 shadow flex gap-2">
+            <button 
+              onClick={() => setViewMode('all')}
+              className={`px-3 py-1 rounded text-sm font-medium transition ${viewMode === 'all' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              ทุกวัน
+            </button>
+            <button 
+              onClick={() => setViewMode('weekday')}
+              className={`px-3 py-1 rounded text-sm font-medium transition ${viewMode === 'weekday' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              จ-พฤ
+            </button>
+            <button 
+              onClick={() => setViewMode('weekend')}
+              className={`px-3 py-1 rounded text-sm font-medium transition ${viewMode === 'weekend' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              ศ-อา
+            </button>
+          </div>
+          
+          <label className="bg-white rounded-lg p-2 shadow flex items-center gap-2 cursor-pointer">
+            <input 
+              type="checkbox" 
+              checked={showMusic} 
+              onChange={(e) => setShowMusic(e.target.checked)}
+              className="w-4 h-4 text-orange-500"
+            />
+            <span className="text-sm font-medium text-gray-700">แสดงเวลาวงเล่น</span>
+          </label>
+        </div>
+        
+        {/* Overall Chart */}
+        <div className="mb-4">
+          <OverallArrivalChart />
+        </div>
+        
+        {/* Daily Charts Grid */}
+        <div className={`grid gap-4 mb-4 ${viewMode === 'all' ? 'md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'md:grid-cols-2'}`}>
+          {filteredDays.map(d => (
+            <DailyArrivalChart key={d.day} data={d} showMusic={showMusic} />
+          ))}
+        </div>
+        
+        {/* Bottom Section */}
+        <div className="grid lg:grid-cols-2 gap-4">
+          <ComparisonTable />
+          <KeyInsights />
+        </div>
+        
+        {/* Footer */}
+        <div className="mt-4 text-center text-xs text-gray-500">
+          ข้อมูลจาก 8,802 บิล Dine-In | ก.พ. 2025 - ม.ค. 2026
+        </div>
+      </div>
+    </div>
+  );
+}
