@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12 Plato — GM Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--teal:#04818A;--amber:#ECA800;--blue:#006CB5;--red:#DD0008;--beige:#F5EFE6;--dark:#2C2C2C;}
+body{font-family:'Poppins',sans-serif;background:var(--beige);color:var(--dark);}
+
+/* Header */
+.hdr{position:relative;background:#FBF3D9;border-bottom:5px solid var(--teal);padding:52px 24px 38px;overflow:hidden;text-align:center;}
+.sh{position:absolute;opacity:.85;border-radius:50%;}
+.c1{width:72px;height:72px;background:var(--teal);top:8px;left:4%;}
+.c2{width:55px;height:55px;background:var(--blue);top:12px;right:7%;}
+.c3{width:88px;height:88px;background:var(--amber);top:4px;left:14%;}
+.c4{width:60px;height:60px;background:var(--red);top:28%;right:4%;}
+.c5{width:80px;height:80px;background:var(--blue);bottom:8px;left:9%;}
+.t1{position:absolute;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-bottom:60px solid var(--red);top:18px;left:24%;opacity:.85;}
+.t2{position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:50px solid var(--amber);bottom:18px;right:24%;transform:rotate(180deg);opacity:.85;}
+.sq{position:absolute;width:60px;height:60px;background:var(--amber);top:26px;left:38%;transform:rotate(15deg);opacity:.85;}
+.rc{position:absolute;width:82px;height:44px;background:var(--blue);top:42px;right:29%;transform:rotate(-14deg);opacity:.85;}
+.hdr-inner{position:relative;z-index:10;}
+.eyebrow{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:5px;text-transform:uppercase;color:var(--teal);background:rgba(255,255,255,.6);display:inline-block;padding:3px 14px;border-radius:20px;margin-bottom:8px;}
+.hdr-inner h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.6rem;letter-spacing:3px;color:var(--dark);}
+.hdr-inner h1 span{color:var(--teal);}
+.hdr-sub{font-size:.9rem;color:#555;font-weight:500;margin-top:6px;}
+.hdr-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+.hbadge{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:4px;color:#fff;}
+.hb-teal{background:var(--teal);} .hb-amber{background:var(--amber);color:#000;} .hb-dark{background:#000;}
+
+/* Layout */
+.wrap{max-width:1080px;margin:0 auto;padding:36px 20px 80px;}
+.sec-hdr{background:#000;color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1rem;letter-spacing:6px;text-transform:uppercase;padding:10px 22px;border-radius:6px;margin:40px 0 20px;display:inline-block;}
+
+/* Summary Cards */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.card{background:#fff;border-radius:10px;padding:22px 20px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.card-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#999;margin-bottom:6px;}
+.card-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.9rem;line-height:1;margin-bottom:4px;}
+.card-sub{font-size:.75rem;color:#777;}
+.card-note{font-size:.68rem;margin-top:6px;padding:4px 10px;border-radius:4px;display:inline-block;font-weight:600;}
+.note-up{background:#DCFCE7;color:#166534;} .note-dn{background:#FEE2E2;color:#991B1B;} .note-flat{background:#FEF9C3;color:#854D0E;}
+
+/* Ratio bar */
+.ratio-row{background:#fff;border-radius:10px;padding:20px 22px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:20px;}
+.ratio-title{font-size:.75rem;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.ratio-bar-wrap{display:flex;border-radius:6px;overflow:hidden;height:32px;margin-bottom:8px;}
+.rb-seg{display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.72rem;color:#fff;}
+.ratio-legend{display:flex;gap:16px;flex-wrap:wrap;}
+.rl-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:#555;}
+.rl-dot{width:10px;height:10px;border-radius:2px;}
+
+/* Beer Table */
+.beer-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);font-size:.8rem;}
+.beer-table thead tr{background:#000;color:#fff;}
+.beer-table th{padding:10px 14px;text-align:left;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;}
+.beer-table th.r{text-align:right;}
+.beer-table td{padding:10px 14px;border-bottom:1px solid #F0F0F0;vertical-align:middle;}
+.beer-table td.r{text-align:right;font-family:'Montserrat',sans-serif;font-weight:700;}
+.beer-table tr:last-child td{border-bottom:none;}
+.beer-table tr:nth-child(even){background:#FAFAFA;}
+.rank-num{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:900;font-size:.8rem;color:#fff;}
+.bar-cell{width:100px;}
+.mini-bar{height:8px;border-radius:4px;margin-bottom:2px;}
+.size-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:3px;font-family:'Montserrat',sans-serif;letter-spacing:.5px;}
+.chip-s{background:#EFF6FF;color:var(--blue);}
+.chip-l{background:#ECFDF5;color:#065F46;}
+
+/* SL Ratio mini-bar */
+.sl-wrap{width:80px;}
+.sl-bar{display:flex;height:6px;border-radius:3px;overflow:hidden;margin-bottom:2px;}
+.sl-s{background:var(--blue);}
+.sl-l{background:var(--teal);}
+.sl-legend{display:flex;justify-content:space-between;font-size:.58rem;color:#888;}
+
+/* Beverage */
+.bev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.bev-card{background:#fff;border-radius:8px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-left:4px solid var(--amber);}
+.bev-name{font-weight:700;font-size:.82rem;margin-bottom:6px;color:var(--dark);}
+.bev-rev{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;color:var(--teal);}
+.bev-qty{font-size:.7rem;color:#888;margin-top:2px;}
+
+/* Footer */
+.foot{text-align:center;margin-top:32px;font-size:.75rem;color:#aaa;font-style:italic;}
+
+@media(max-width:700px){
+  .cards3{grid-template-columns:1fr;}
+  .hdr-inner h1{font-size:1.9rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="sh c1"></div><div class="sh c2"></div><div class="sh c3"></div>
+  <div class="sh c4"></div><div class="sh c5"></div>
+  <div class="t1"></div><div class="t2"></div><div class="sq"></div><div class="rc"></div>
+  <div class="hdr-inner">
+    <div class="eyebrow">Management Meeting · มีนาคม 2026</div>
+    <h1>12 <span>PLATO</span></h1>
+    <div class="hdr-sub">GM Dashboard — Revenue & Bar Performance · Dec 2025 – Feb 2026</div>
+    <div class="hdr-badges">
+      <span class="hbadge hb-teal">3-Month Review</span>
+      <span class="hbadge hb-amber">POS: FoodStory</span>
+      <span class="hbadge hb-dark">2,159 Bills Analyzed</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- REVENUE OVERVIEW -->
+  <div class="sec-hdr">Revenue Overview</div>
+  <div class="cards3">
+    <div class="card" style="border-top:4px solid var(--teal);">
+      <div class="card-label">Dec 2025</div>
+      <div class="card-val" style="color:var(--teal);">฿1,285,086</div>
+      <div class="card-sub">762 บิล · เฉลี่ย ฿1,686/บิล</div>
+      <div class="card-sub" style="margin-top:4px;">฿41,454 / วัน</div>
+      <span class="card-note note-up">🟢 ไฮซีซัน</span>
+    </div>
+    <div class="card" style="border-top:4px solid var(--blue);">
+      <div class="card-label">Jan 2026</div>
+      <div class="card-val" style="color:var(--blue);">฿989,524</div>
+      <div class="card-sub">625 บิล · เฉลี่ย ฿1,583/บิล</div>
+      <div class="card-sub" style="margin-top:4px;">฿32,984 / วัน</div>
+      <span class="card-note note-dn">🔴 ลด 23% จาก Dec</span>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber);">
+      <div class="card-label">Feb 2026</div>
+      <div class="card-val" style="color:var(--amber);">฿990,958</div>
+      <div class="card-sub">772 บิล · เฉลี่ย ฿1,284/บิล</div>
+      <div class="card-sub" style="margin-top:4px;">฿34,171 / วัน</div>
+      <span class="card-note note-flat">⚠️ บิลเพิ่ม แต่ avg ลด</span>
+    </div>
+  </div>
+
+  <!-- Revenue Mix -->
+  <div class="ratio-row">
+    <div class="ratio-title">Revenue Mix — Beer vs Food vs Beverage (เฉลี่ย 3 เดือน)</div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:.7rem;color:#888;margin-bottom:4px;">Dec 2025</div>
+      <div class="ratio-bar-wrap">
+        <div class="rb-seg" style="width:49.5%;background:var(--teal);">Beer 49.5%</div>
+        <div class="rb-seg" style="width:6.5%;background:var(--blue);">BH</div>
+        <div class="rb-seg" style="width:40.5%;background:var(--amber);color:#000;">Food 40.5%</div>
+        <div class="rb-seg" style="width:3.5%;background:#9CA3AF;font-size:.58rem;">Bev</div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:.7rem;color:#888;margin-bottom:4px;">Jan 2026</div>
+      <div class="ratio-bar-wrap">
+        <div class="rb-seg" style="width:44.2%;background:var(--teal);">Beer 44.2%</div>
+        <div class="rb-seg" style="width:10.1%;background:var(--blue);">BH 10%</div>
+        <div class="rb-seg" style="width:42.2%;background:var(--amber);color:#000;">Food 42.2%</div>
+        <div class="rb-seg" style="width:3.2%;background:#9CA3AF;font-size:.58rem;">B</div>
+      </div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:.7rem;color:#888;margin-bottom:4px;">Feb 2026</div>
+      <div class="ratio-bar-wrap">
+        <div class="rb-seg" style="width:41.3%;background:var(--teal);">Beer 41.3%</div>
+        <div class="rb-seg" style="width:13.9%;background:var(--blue);">BH 14%</div>
+        <div class="rb-seg" style="width:40.2%;background:var(--amber);color:#000;">Food 40.2%</div>
+        <div class="rb-seg" style="width:4.4%;background:#9CA3AF;font-size:.58rem;">B</div>
+      </div>
+    </div>
+    <div class="ratio-legend">
+      <div class="rl-item"><div class="rl-dot" style="background:var(--teal);"></div>Beers (12 Plato SKU)</div>
+      <div class="rl-item"><div class="rl-dot" style="background:var(--blue);"></div>Brewhouse (Taproom)</div>
+      <div class="rl-item"><div class="rl-dot" style="background:var(--amber);"></div>Foods</div>
+      <div class="rl-item"><div class="rl-dot" style="background:#9CA3AF;"></div>Beverage</div>
+    </div>
+  </div>
+
+  <!-- TOP 15 BEER -->
+  <div class="sec-hdr">Top 15 Beer — Sales Ranking</div>
+  <div style="background:#FEF9C3;border-left:4px solid var(--amber);border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:.78rem;color:#854D0E;">
+    ⚠️ <strong>หมายเหตุ:</strong> S = แก้ว 330ml · L = แก้ว 473ml · ราคาคือ median จากข้อมูลจริง · ยอดรวมจาก Dec 2025 – Feb 2026
+  </div>
+
+  <table class="beer-table">
+    <thead>
+      <tr>
+        <th style="width:36px;">#</th>
+        <th>ชื่อเบียร์</th>
+        <th class="r">ยอดรวม</th>
+        <th class="r">แก้ว S (330ml)</th>
+        <th class="r">แก้ว L (473ml)</th>
+        <th class="r">ราคา S</th>
+        <th class="r">ราคา L</th>
+        <th>สัดส่วน S:L</th>
+      </tr>
+    </thead>
+    <tbody id="beerTbody"></tbody>
+  </table>
+
+  <!-- BEVERAGE -->
+  <div class="sec-hdr">Beverage — Non-Beer Drinks</div>
+  <div style="background:#F0F9FF;border-left:4px solid var(--blue);border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:.78rem;color:#1D4ED8;">
+    💡 <strong>Regency 350ml</strong> มียอดแล้ว ฿8,789 จาก 19 ออเดอร์ — เฉลี่ย ฿463/ออเดอร์ · ติดตามต่อเนื่องใน Q2
+  </div>
+  <div class="bev-grid" id="bevGrid"></div>
+
+  <!-- Monthly Beer Revenue -->
+  <div class="sec-hdr">Beer Revenue — Monthly Trend</div>
+  <div class="cards3">
+    <div class="card" style="border-top:4px solid var(--teal);">
+      <div class="card-label">Dec 2025 · Beer + Brewhouse</div>
+      <div class="card-val" style="color:var(--teal);">฿713,172</div>
+      <div class="card-sub">55.6% ของ Revenue ทั้งหมด</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--blue);">
+      <div class="card-label">Jan 2026 · Beer + Brewhouse</div>
+      <div class="card-val" style="color:var(--blue);">฿535,988</div>
+      <div class="card-sub">54.3% ของ Revenue ทั้งหมด</div>
+      <span class="card-note note-dn">▼ ฿177K จาก Dec</span>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber);">
+      <div class="card-label">Feb 2026 · Beer + Brewhouse</div>
+      <div class="card-val" style="color:var(--amber);">฿547,204</div>
+      <div class="card-sub">55.3% ของ Revenue ทั้งหมด</div>
+      <span class="card-note note-up">▲ ฿11K จาก Jan</span>
+    </div>
+  </div>
+
+  <div class="foot">12 Plato Brewing · GM Dashboard · ข้อมูล POS FoodStory · Dec 2025 – Feb 2026 · จัดทำเพื่อประชุมภายใน</div>
+</div>
+
+<script>
+const beers = [
+  {rank:1,  name:"Live Forever 25",     revS:32604, revL:31394, qtyS:156, qtyL:132, priceS:240, priceL:340},
+  {rank:2,  name:"Double Trouble Nelson",revS:29496, revL:29140, qtyS:137, qtyL:124, priceS:240, priceL:330},
+  {rank:3,  name:"samutprakan",          revS:21850, revL:28594, qtyS:175, qtyL:137, priceS:190, priceL:290},
+  {rank:4,  name:"Hazy Crush",           revS:27300, revL:21624, qtyS:119, qtyL:104, priceS:240, priceL:340},
+  {rank:5,  name:"Bridges DDH",          revS:16800, revL:23460, qtyS:70,  qtyL:101, priceS:240, priceL:340},
+  {rank:6,  name:"Bangna Lager",         revS:17670, revL:18241, qtyS:117, qtyL:73,  priceS:190, priceL:290},
+  {rank:7,  name:"Thai Dessert",         revS:23760, revL:12090, qtyS:107, qtyL:41,  priceS:270, priceL:370},
+  {rank:8,  name:"Pp Berries",           revS:17820, revL:11760, qtyS:70,  qtyL:42,  priceS:270, priceL:370},
+  {rank:9,  name:"Krush Chill",          revS:18924, revL:10200, qtyS:97,  qtyL:45,  priceS:240, priceL:340},
+  {rank:10, name:"Watermelon Wave",       revS:16699, revL:7770,  qtyS:82,  qtyL:24,  priceS:270, priceL:370},
+  {rank:11, name:"The New New West",      revS:14220, revL:9469,  qtyS:77,  qtyL:55,  priceS:240, priceL:340},
+  {rank:12, name:"Bangna",               revS:12711, revL:10920, qtyS:81,  qtyL:44,  priceS:190, priceL:280},
+  {rank:13, name:"Bangna PALE",          revS:12880, revL:10190, qtyS:57,  qtyL:31,  priceS:240, priceL:340},
+  {rank:14, name:"Bangna Pale",          revS:9816,  revL:11770, qtyS:41,  qtyL:53,  priceS:240, priceL:340},
+  {rank:15, name:"Mango Delight",         revS:13149, revL:8084,  qtyS:49,  qtyL:22,  priceS:270, priceL:370},
+];
+
+const rankColors = [
+  '#ECA800','#9CA3AF','#CD7F32',
+  '#04818A','#04818A','#006CB5','#006CB5','#006CB5','#006CB5','#006CB5',
+  '#6B7280','#6B7280','#6B7280','#6B7280','#6B7280'
+];
+
+const maxRev = Math.max(...beers.map(b=>b.revS+b.revL));
+const tbody = document.getElementById('beerTbody');
+
+beers.forEach(b => {
+  const totalRev = b.revS + b.revL;
+  const totalQty = b.qtyS + b.qtyL;
+  const pctS = b.qtyS/(b.qtyS+b.qtyL)*100;
+  const pctL = 100-pctS;
+  const barW = Math.round(totalRev/maxRev*100);
+
+  tbody.innerHTML += `
+  <tr>
+    <td><span class="rank-num" style="background:${rankColors[b.rank-1]}">${b.rank}</span></td>
+    <td>
+      <div style="font-weight:700;font-size:.85rem;">${b.name}</div>
+      <div style="display:flex;gap:6px;margin-top:4px;">
+        <div class="mini-bar" style="width:${barW}px;max-width:120px;background:var(--teal);"></div>
+      </div>
+    </td>
+    <td class="r" style="color:var(--teal);">฿${totalRev.toLocaleString()}<br><span style="font-size:.65rem;color:#888;font-weight:400;">${totalQty} แก้ว</span></td>
+    <td class="r"><span class="chip chip-s">S×${b.qtyS}</span><br><span style="font-size:.65rem;color:#888;">฿${b.revS.toLocaleString()}</span></td>
+    <td class="r"><span class="chip chip-l">L×${b.qtyL}</span><br><span style="font-size:.65rem;color:#888;">฿${b.revL.toLocaleString()}</span></td>
+    <td class="r" style="color:var(--blue);">฿${b.priceS}</td>
+    <td class="r" style="color:var(--teal);">฿${b.priceL}</td>
+    <td>
+      <div class="sl-wrap">
+        <div class="sl-bar">
+          <div class="sl-s" style="width:${pctS.toFixed(0)}%"></div>
+          <div class="sl-l" style="width:${pctL.toFixed(0)}%"></div>
+        </div>
+        <div class="sl-legend">
+          <span style="color:var(--blue);">S ${pctS.toFixed(0)}%</span>
+          <span style="color:var(--teal);">L ${pctL.toFixed(0)}%</span>
+        </div>
+      </div>
+    </td>
+  </tr>`;
+});
+
+const beverages = [
+  {name:"Water",            rev:56409, qty:1884, price:30},
+  {name:"Fruit Punch",      rev:10127, qty:78,   price:130},
+  {name:"Lychee Iced Tea",  rev:9035,  qty:70,   price:130},
+  {name:"Regency 350ml 🆕", rev:8789,  qty:19,   price:799},
+  {name:"Corkage Fee",      rev:7200,  qty:24,   price:400},
+  {name:"SODA",             rev:6623,  qty:232,  price:40},
+  {name:"COKE",             rev:5630,  qty:141,  price:40},
+  {name:"Sangria",          rev:3950,  qty:10,   price:395},
+  {name:"COKE ZERO",        rev:3560,  qty:91,   price:40},
+  {name:"ICE",              rev:3300,  qty:110,  price:30},
+];
+
+const bevGrid = document.getElementById('bevGrid');
+beverages.forEach(b => {
+  bevGrid.innerHTML += `
+  <div class="bev-card">
+    <div class="bev-name">${b.name}</div>
+    <div class="bev-rev">฿${b.rev.toLocaleString()}</div>
+    <div class="bev-qty">จำนวน ${b.qty} ออเดอร์ · ฿${b.price}/หน่วย</div>
+  </div>`;
+});
+</script>
+</body>
+</html>

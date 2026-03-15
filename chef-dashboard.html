@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12 Plato — Chef Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--teal:#04818A;--amber:#ECA800;--blue:#006CB5;--red:#DD0008;--beige:#F5EFE6;--dark:#2C2C2C;}
+body{font-family:'Poppins',sans-serif;background:var(--beige);color:var(--dark);}
+.hdr{position:relative;background:#FBF3D9;border-bottom:5px solid var(--amber);padding:52px 24px 38px;overflow:hidden;text-align:center;}
+.sh{position:absolute;opacity:.85;border-radius:50%;}
+.c1{width:72px;height:72px;background:var(--amber);top:8px;left:4%;}
+.c2{width:55px;height:55px;background:var(--red);top:12px;right:7%;}
+.c3{width:88px;height:88px;background:var(--teal);top:4px;left:14%;}
+.c4{width:60px;height:60px;background:var(--blue);top:28%;right:4%;}
+.c5{width:80px;height:80px;background:var(--amber);bottom:8px;left:9%;}
+.t1{position:absolute;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-bottom:60px solid var(--red);top:18px;left:24%;opacity:.85;}
+.t2{position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:50px solid var(--teal);bottom:18px;right:24%;transform:rotate(180deg);opacity:.85;}
+.sq{position:absolute;width:60px;height:60px;background:var(--red);top:26px;left:38%;transform:rotate(15deg);opacity:.85;}
+.rc{position:absolute;width:82px;height:44px;background:var(--amber);top:42px;right:29%;transform:rotate(-14deg);opacity:.85;}
+.hdr-inner{position:relative;z-index:10;}
+.eyebrow{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:5px;text-transform:uppercase;color:var(--amber);background:rgba(255,255,255,.6);display:inline-block;padding:3px 14px;border-radius:20px;margin-bottom:8px;}
+.hdr-inner h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.6rem;letter-spacing:3px;color:var(--dark);}
+.hdr-inner h1 span{color:var(--amber);}
+.hdr-sub{font-size:.9rem;color:#555;font-weight:500;margin-top:6px;}
+.hdr-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+.hbadge{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:4px;color:#fff;}
+.hb-amber{background:var(--amber);color:#000;} .hb-red{background:var(--red);} .hb-dark{background:#000;}
+
+.wrap{max-width:1080px;margin:0 auto;padding:36px 20px 80px;}
+.sec-hdr{background:#000;color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1rem;letter-spacing:6px;text-transform:uppercase;padding:10px 22px;border-radius:6px;margin:40px 0 20px;display:inline-block;}
+
+/* Menu Trend Table */
+.menu-table-wrap{overflow-x:auto;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.menu-table{width:100%;border-collapse:collapse;background:#fff;font-size:.76rem;min-width:860px;}
+.menu-table thead tr{background:#000;color:#fff;}
+.menu-table th{padding:9px 10px;text-align:left;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.6rem;letter-spacing:1.3px;text-transform:uppercase;white-space:nowrap;}
+.menu-table th.r{text-align:right;}
+.menu-table td{padding:9px 10px;border-bottom:1px solid #F0F0F0;vertical-align:middle;}
+.menu-table td.r{text-align:right;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.78rem;}
+.menu-table tr:nth-child(even){background:#FAFAFA;}
+.menu-table tr:last-child td{border-bottom:none;}
+.trend-up{color:#16A34A;font-weight:700;} .trend-dn{color:var(--red);font-weight:700;} .trend-flat{color:#D97706;font-weight:700;}
+.arrow-up::before{content:'▲ '} .arrow-dn::before{content:'▼ '}
+.cat-chip{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:3px;font-family:'Montserrat',sans-serif;letter-spacing:.5px;display:inline-block;}
+.qty-val{font-size:.68rem;color:#888;font-weight:500;font-family:'Poppins',sans-serif;display:block;margin-top:1px;}
+.col-grp-rev{background:rgba(4,129,138,.06);}
+.col-grp-qty{background:rgba(236,168,0,.06);}
+.th-rev{background:#04818A;}
+.th-qty{background:#B45309;}
+
+/* Sharing Grid */
+.sharing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.sharing-card{background:#fff;border-radius:8px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-left:4px solid var(--amber);}
+.sc-name{font-weight:700;font-size:.82rem;margin-bottom:8px;color:var(--dark);line-height:1.4;}
+.sc-rev{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--amber);}
+.sc-months{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.sc-m{font-size:.65rem;padding:2px 8px;border-radius:3px;font-weight:600;}
+.dec-m{background:#EEF2FF;color:#4338CA;} .jan-m{background:#EFF6FF;color:var(--blue);} .feb-m{background:#FFFBEB;color:#B45309;}
+
+/* Pairing */
+.pairing-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.pairing-card{background:#fff;border-radius:10px;padding:18px 20px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.pc-beer{font-family:'Montserrat',sans-serif;font-weight:800;font-size:.9rem;color:var(--teal);margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #F0F0F0;}
+.pc-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;font-size:.77rem;color:var(--dark);}
+.pc-bar-wrap{width:80px;height:6px;background:#F0F0F0;border-radius:3px;overflow:hidden;}
+.pc-bar{height:100%;border-radius:3px;background:var(--amber);}
+.pc-count{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.72rem;color:#888;min-width:28px;text-align:right;}
+
+/* Category summary */
+.cat-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
+.cat-card{background:#fff;border-radius:8px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.07);text-align:center;}
+.cat-card .cc-name{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:6px;}
+.cat-card .cc-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.3rem;}
+
+.foot{text-align:center;margin-top:32px;font-size:.75rem;color:#aaa;font-style:italic;}
+@media(max-width:700px){.hdr-inner h1{font-size:1.9rem;}.pairing-wrap{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="sh c1"></div><div class="sh c2"></div><div class="sh c3"></div>
+  <div class="sh c4"></div><div class="sh c5"></div>
+  <div class="t1"></div><div class="t2"></div><div class="sq"></div><div class="rc"></div>
+  <div class="hdr-inner">
+    <div class="eyebrow">Management Meeting · มีนาคม 2026</div>
+    <h1>12 <span>PLATO</span></h1>
+    <div class="hdr-sub">Chef Dashboard — Menu Performance & Food Insights · Dec 2025 – Feb 2026</div>
+    <div class="hdr-badges">
+      <span class="hbadge hb-amber">Menu Engineering</span>
+      <span class="hbadge hb-red">Beer × Food Pairing</span>
+      <span class="hbadge hb-dark">13,040 Line Items</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- FOOD CATEGORY OVERVIEW -->
+  <div class="sec-hdr">Food Category Overview</div>
+  <div class="cat-cards">
+    <div class="cat-card" style="border-top:4px solid var(--amber);">
+      <div class="cc-name">Sharing</div>
+      <div class="cc-val" style="color:var(--amber);">฿435,775</div>
+      <div style="font-size:.7rem;color:#888;margin-top:4px;">อันดับ 1</div>
+    </div>
+    <div class="cat-card" style="border-top:4px solid var(--teal);">
+      <div class="cc-name">A La Carte</div>
+      <div class="cc-val" style="color:var(--teal);">฿226,359</div>
+      <div style="font-size:.7rem;color:#888;margin-top:4px;">อันดับ 2</div>
+    </div>
+    <div class="cat-card" style="border-top:4px solid var(--blue);">
+      <div class="cc-name">Appetizers</div>
+      <div class="cc-val" style="color:var(--blue);">฿180,011</div>
+      <div style="font-size:.7rem;color:#888;margin-top:4px;">อันดับ 3</div>
+    </div>
+    <div class="cat-card" style="border-top:4px solid var(--red);">
+      <div class="cc-name">12P Signatures</div>
+      <div class="cc-val" style="color:var(--red);">฿159,332</div>
+      <div style="font-size:.7rem;color:#888;margin-top:4px;">อันดับ 4</div>
+    </div>
+    <div class="cat-card" style="border-top:4px solid #9CA3AF;">
+      <div class="cc-name">Salad</div>
+      <div class="cc-val" style="color:#6B7280;">฿126,616</div>
+    </div>
+    <div class="cat-card" style="border-top:4px solid #9CA3AF;">
+      <div class="cc-name">Wingstop</div>
+      <div class="cc-val" style="color:#6B7280;">฿120,772</div>
+    </div>
+  </div>
+
+  <!-- MENU TREND -->
+  <div class="sec-hdr">Menu Trend — Top 20 รายการ</div>
+  <div style="background:#FEF9C3;border-left:4px solid var(--amber);border-radius:6px;padding:10px 16px;margin-bottom:14px;font-size:.77rem;color:#854D0E;">
+    ▲ = สูงกว่าเดือนก่อน &nbsp;|&nbsp; ▼ = ลดลง &nbsp;|&nbsp; แสดงทั้ง <span style="color:var(--teal);font-weight:700;">ยอดขาย (Rev)</span> และ <span style="color:#B45309;font-weight:700;">จำนวน (QTY)</span>
+  </div>
+  <div class="menu-table-wrap">
+  <table class="menu-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width:26px;vertical-align:middle;">#</th>
+        <th rowspan="2" style="vertical-align:middle;">รายการอาหาร</th>
+        <th colspan="2" class="th-rev" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3);">Dec 2025</th>
+        <th colspan="2" class="th-rev" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3);">Jan 2026</th>
+        <th colspan="2" class="th-rev" style="text-align:center;border-bottom:1px solid rgba(255,255,255,.3);">Feb 2026</th>
+        <th colspan="2" style="text-align:center;background:#374151;border-bottom:1px solid rgba(255,255,255,.3);">Δ Dec→Jan</th>
+        <th colspan="2" style="text-align:center;background:#374151;border-bottom:1px solid rgba(255,255,255,.3);">Δ Jan→Feb</th>
+        <th rowspan="2" style="vertical-align:middle;">โดยรวม</th>
+      </tr>
+      <tr>
+        <th class="r th-rev" style="font-size:.55rem;">Rev</th>
+        <th class="r th-qty" style="font-size:.55rem;">Qty</th>
+        <th class="r th-rev" style="font-size:.55rem;">Rev</th>
+        <th class="r th-qty" style="font-size:.55rem;">Qty</th>
+        <th class="r th-rev" style="font-size:.55rem;">Rev</th>
+        <th class="r th-qty" style="font-size:.55rem;">Qty</th>
+        <th class="r" style="background:#374151;font-size:.55rem;">Rev</th>
+        <th class="r" style="background:#374151;font-size:.55rem;">Qty</th>
+        <th class="r" style="background:#374151;font-size:.55rem;">Rev</th>
+        <th class="r" style="background:#374151;font-size:.55rem;">Qty</th>
+      </tr>
+    </thead>
+    <tbody id="menuTbody"></tbody>
+  </table>
+  </div>
+
+  <!-- SHARING CATEGORY -->
+  <div class="sec-hdr">Sharing / Set Menu</div>
+  <div style="background:#F0F9FF;border-left:4px solid var(--blue);border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:.77rem;color:#1D4ED8;">
+    💡 Sharing คือ Category ที่ทำยอดสูงสุดในกลุ่ม Food — ฿435,775 รวม 3 เดือน · Hanger Steak ครองอันดับ 1
+  </div>
+  <div class="sharing-grid" id="sharingGrid"></div>
+
+  <!-- BEER x FOOD PAIRING -->
+  <div class="sec-hdr">Beer × Food Pairing</div>
+  <div style="background:#F0FDF4;border-left:4px solid var(--teal);border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:.77rem;color:#166534;">
+    💡 วิเคราะห์จากบิลที่มีทั้งเบียร์และอาหารในบิลเดียวกัน — แสดง Top 4 อาหารที่สั่งคู่กับเบียร์แต่ละตัวมากที่สุด
+  </div>
+  <div class="pairing-wrap" id="pairingWrap"></div>
+
+  <div class="foot">12 Plato Brewing · Chef Dashboard · ข้อมูล POS FoodStory · Dec 2025 – Feb 2026 · จัดทำเพื่อประชุมภายใน</div>
+</div>
+
+<script>
+// Menu Trend Data — Rev + QTY per month
+// Format: {name, decR, janR, febR, decQ, janQ, febQ}
+const menuData = [
+  {name:"Grilled Hanger (Med-Rare)",  decR:18255, janR:18130, febR:15365, decQ:54, janQ:46, febQ:39},
+  {name:"Mixed Fries",                decR:21537, janR:17475, febR:11475, decQ:116,janQ:70, febQ:46},
+  {name:"Sweet Potato Fries",         decR:17584, janR:12896, febR:17408, decQ:110,janQ:81, febQ:116},
+  {name:"Calamari",                   decR:17920, janR:14360, febR:13600, decQ:90, janQ:72, febQ:68},
+  {name:"Grilled Hanger (Medium)",    decR:13810, janR:15010, febR:16550, decQ:40, janQ:38, febQ:42},
+  {name:"Mexican BBQ Ribs",           decR:9450,  janR:13950, febR:14850, decQ:55, janQ:34, febQ:33},
+  {name:"Loaded Nacho (ราด)",         decR:14790, janR:10701, febR:12412, decQ:74, janQ:37, febQ:43},
+  {name:"12P Mixed Grill (Med-Rare)", decR:13351, janR:10270, febR:11850, decQ:49, janQ:13, febQ:15},
+  {name:"Northern Wing 6 Pcs.",       decR:13132, janR:11760, febR:10241, decQ:61, janQ:48, febQ:42},
+  {name:"Grilled Pork Neck",          decR:15134, janR:10281, febR:9430,  decQ:67, janQ:45, febQ:41},
+  {name:"Caesar Salad",               decR:12463, janR:11440, febR:10516, decQ:64, janQ:52, febQ:48},
+  {name:"Grilled Pork Sausage",       decR:16128, janR:3240,  febR:14760, decQ:68, janQ:9,  febQ:41},
+  {name:"Mentaiko Fried",             decR:8768,  janR:11328, febR:11360, decQ:55, janQ:71, febQ:71},
+  {name:"Chicken Tinga Quesadilla",   decR:11154, janR:7800,  febR:11180, decQ:43, janQ:30, febQ:49},
+  {name:"Pork Fat Fried Rice",        decR:10900, janR:9496,  febR:9135,  decQ:62, janQ:49, febQ:47},
+  {name:"12P Mixed Grill (Medium)",   decR:14101, janR:8611,  febR:5530,  decQ:18, janQ:11, febQ:7},
+  {name:"Old School Instant Noodle",  decR:11765, janR:7462,  febR:8060,  decQ:78, janQ:30, febQ:31},
+  {name:"Fried Chicken Tendons",      decR:10746, janR:8604,  febR:7920,  decQ:60, janQ:48, febQ:44},
+  {name:"Loaded Nacho (แยก)",         decR:8961,  janR:8671,  febR:9280,  decQ:45, janQ:30, febQ:32},
+  {name:"Hat-Yai Karaage",            decR:8748,  janR:7866,  febR:8622,  decQ:49, janQ:44, febQ:48},
+];
+
+function fmtR(n){return n>0?'฿'+n.toLocaleString():'-';}
+function fmtQ(n){return n>0?n+'ชิ้น':'-';}
+function tcR(v){return v>300?'trend-up arrow-up':v<-300?'trend-dn arrow-dn':'trend-flat';}
+function tcQ(v){return v>3?'trend-up arrow-up':v<-3?'trend-dn arrow-dn':'trend-flat';}
+function trendIcon(dR1,dR2,dQ1,dQ2){
+  const upR=dR2>300, dnR=dR2<-300, upQ=dQ2>3, dnQ=dQ2<-3;
+  if(upR&&upQ) return '📈 ขึ้นต่อเนื่อง';
+  if(dnR&&dnQ) return '📉 ลงต่อเนื่อง';
+  if((dnR&&upQ)||(upR&&dnQ)) return '🔄 ฟื้นตัว';
+  const prevUpR=dR1>300, prevDnR=dR1<-300;
+  if(prevUpR&&dnR) return '⚠️ ระวัง';
+  if(prevDnR&&upR) return '✅ ฟื้นตัว';
+  return '➡️ คงที่';
+}
+
+const tbody = document.getElementById('menuTbody');
+menuData.forEach((m,i)=>{
+  const dR1=m.janR-m.decR, dR2=m.febR-m.janR;
+  const dQ1=m.janQ-m.decQ, dQ2=m.febQ-m.janQ;
+  const even = i%2===1?'background:#FAFAFA':'';
+  tbody.innerHTML+=`
+  <tr style="${even}">
+    <td style="font-family:'Montserrat',sans-serif;font-weight:700;color:#9CA3AF;">${i+1}</td>
+    <td style="font-weight:600;font-size:.78rem;">${m.name}</td>
+    <td class="r col-grp-rev">${fmtR(m.decR)}</td>
+    <td class="r col-grp-qty" style="color:#92400E;">${fmtQ(m.decQ)}</td>
+    <td class="r col-grp-rev">${fmtR(m.janR)}</td>
+    <td class="r col-grp-qty" style="color:#92400E;">${fmtQ(m.janQ)}</td>
+    <td class="r col-grp-rev">${fmtR(m.febR)}</td>
+    <td class="r col-grp-qty" style="color:#92400E;">${fmtQ(m.febQ)}</td>
+    <td class="r ${tcR(dR1)}">${dR1>0?'+':''}${dR1!==0?'฿'+Math.abs(dR1).toLocaleString():'-'}</td>
+    <td class="r ${tcQ(dQ1)}">${dQ1>0?'+':''}${dQ1!==0?Math.abs(dQ1)+'ชิ้น':'-'}</td>
+    <td class="r ${tcR(dR2)}">${dR2>0?'+':''}${dR2!==0?'฿'+Math.abs(dR2).toLocaleString():'-'}</td>
+    <td class="r ${tcQ(dQ2)}">${dQ2>0?'+':''}${dQ2!==0?Math.abs(dQ2)+'ชิ้น':'-'}</td>
+    <td style="font-size:.7rem;white-space:nowrap;">${trendIcon(dR1,dR2,dQ1,dQ2)}</td>
+  </tr>`;
+});
+
+// Sharing — sorted descending by total revenue
+const sharing = [
+  {name:"Grilled Hanger (Med-Rare)",  dec:18255, jan:18130, feb:15365, total:51751, decQ:54, janQ:46, febQ:39},
+  {name:"Mixed Fries",                dec:21537, jan:17475, feb:11475, total:50487, decQ:116,janQ:70, febQ:46},
+  {name:"Grilled Hanger (Medium)",    dec:13810, jan:15010, feb:16550, total:45371, decQ:40, janQ:38, febQ:42},
+  {name:"Loaded Nacho (ราด)",         dec:14790, jan:10701, feb:12412, total:37903, decQ:74, janQ:37, febQ:43},
+  {name:"Grilled Pork Neck",          dec:15134, jan:10281, feb:9430,  total:34845, decQ:67, janQ:45, febQ:41},
+  {name:"Grilled Pork Sausage",       dec:16128, jan:3240,  feb:14760, total:34128, decQ:68, janQ:9,  febQ:41},
+  {name:"Chicken Tinga Quesadilla",   dec:11154, jan:7800,  feb:11180, total:30134, decQ:43, janQ:30, febQ:49},
+  {name:"Old School Instant Noodle",  dec:11765, jan:7462,  feb:8060,  total:27287, decQ:78, janQ:30, febQ:31},
+  {name:"Loaded Nacho (แยก)",         dec:8961,  jan:8671,  feb:9280,  total:26912, decQ:45, janQ:30, febQ:32},
+  {name:"12P Mixed Grill (Med-Rare)", dec:13351, jan:4740,  feb:0,     total:18091, decQ:18, janQ:11, febQ:0},
+  {name:"12P Mixed Grill (Medium)",   dec:14101, jan:3950,  feb:0,     total:18051, decQ:17, janQ:6,  febQ:0},
+  {name:"Salted Egg Fire Bloom",      dec:1900,  jan:4560,  feb:4503,  total:10963, decQ:10, janQ:24, febQ:24},
+  {name:"Corn Chip & Salsa",          dec:3500,  jan:3640,  feb:2958,  total:10097, decQ:20, janQ:21, febQ:17},
+];
+const sg = document.getElementById('sharingGrid');
+sharing.forEach(s=>{
+  const totalQ = s.decQ + s.janQ + s.febQ;
+  sg.innerHTML+=`
+  <div class="sharing-card">
+    <div class="sc-name">${s.name}</div>
+    <div class="sc-rev">฿${s.total.toLocaleString()} <span style="font-size:.7rem;color:#888;font-family:'Poppins',sans-serif;font-weight:400;">${totalQ} จาน</span></div>
+    <div class="sc-months">
+      ${s.dec>0?`<span class="sc-m dec-m">Dec ฿${s.dec.toLocaleString()} (${s.decQ})</span>`:''}
+      ${s.jan>0?`<span class="sc-m jan-m">Jan ฿${s.jan.toLocaleString()} (${s.janQ})</span>`:''}
+      ${s.feb>0?`<span class="sc-m feb-m">Feb ฿${s.feb.toLocaleString()} (${s.febQ})</span>`:'<span class="sc-m" style="background:#FEE2E2;color:#991B1B;">Feb ไม่มียอด</span>'}
+    </div>
+  </div>`;
+});
+
+// Beer x Food Pairing
+const pairings = [
+  {beer:"Live Forever 25",      foods:[{f:"Sweet Potato Fries",n:28},{f:"Mixed Fries",n:26},{f:"Calamari",n:23},{f:"Mentaiko Fried",n:19}]},
+  {beer:"Double Trouble Nelson",foods:[{f:"Sweet Potato Fries",n:26},{f:"Calamari",n:25},{f:"Hat-Yai Karaage",n:18},{f:"Mentaiko Fried",n:18}]},
+  {beer:"samutprakan",          foods:[{f:"Mixed Fries",n:28},{f:"Calamari",n:26},{f:"Mentaiko Fried",n:20},{f:"Sweet Potato Fries",n:18}]},
+  {beer:"Hazy Crush",           foods:[{f:"Sweet Potato Fries",n:20},{f:"Calamari",n:18},{f:"Supercorn",n:17},{f:"Mixed Fries",n:17}]},
+  {beer:"Bridges DDH",          foods:[{f:"Mixed Fries",n:18},{f:"Sweet Potato Fries",n:18},{f:"Calamari",n:14},{f:"Grilled Hanger (MR)",n:13}]},
+  {beer:"Bangna Lager",         foods:[{f:"Calamari",n:21},{f:"Sweet Potato Fries",n:17},{f:"Mixed Fries",n:17},{f:"Grilled Pork Neck",n:17}]},
+  {beer:"Thai Dessert",         foods:[{f:"Sweet Potato Fries",n:21},{f:"Mixed Fries",n:21},{f:"Mentaiko Fried",n:15},{f:"Calamari",n:15}]},
+  {beer:"12plato Lager",        foods:[{f:"Sweet Potato Fries",n:16},{f:"Mixed Fries",n:10},{f:"Northern Wing",n:9},{f:"Fried Chicken Tendons",n:8}]},
+];
+const pw = document.getElementById('pairingWrap');
+pairings.forEach(p=>{
+  const maxN = p.foods[0].n;
+  const rows = p.foods.map(f=>`
+    <div class="pc-row">
+      <span style="flex:1;padding-right:8px;font-size:.74rem;">${f.f}</span>
+      <div class="pc-bar-wrap"><div class="pc-bar" style="width:${Math.round(f.n/maxN*100)}%"></div></div>
+      <span class="pc-count">${f.n}×</span>
+    </div>`).join('');
+  pw.innerHTML+=`
+  <div class="pairing-card">
+    <div class="pc-beer">🍺 ${p.beer}</div>
+    ${rows}
+  </div>`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12 Plato — MKT Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--teal:#04818A;--amber:#ECA800;--blue:#006CB5;--red:#DD0008;--beige:#F5EFE6;--dark:#2C2C2C;}
+body{font-family:'Poppins',sans-serif;background:var(--beige);color:var(--dark);}
+.hdr{position:relative;background:#FBF3D9;border-bottom:5px solid var(--blue);padding:52px 24px 38px;overflow:hidden;text-align:center;}
+.sh{position:absolute;opacity:.85;border-radius:50%;}
+.c1{width:72px;height:72px;background:var(--blue);top:8px;left:4%;}
+.c2{width:55px;height:55px;background:var(--teal);top:12px;right:7%;}
+.c3{width:88px;height:88px;background:var(--amber);top:4px;left:14%;}
+.c4{width:60px;height:60px;background:var(--blue);top:28%;right:4%;}
+.c5{width:80px;height:80px;background:var(--red);bottom:8px;left:9%;}
+.t1{position:absolute;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-bottom:60px solid var(--amber);top:18px;left:24%;opacity:.85;}
+.t2{position:absolute;width:0;height:0;border-left:28px solid transparent;border-right:28px solid transparent;border-bottom:50px solid var(--blue);bottom:18px;right:24%;transform:rotate(180deg);opacity:.85;}
+.sq{position:absolute;width:60px;height:60px;background:var(--teal);top:26px;left:38%;transform:rotate(15deg);opacity:.85;}
+.rc{position:absolute;width:82px;height:44px;background:var(--red);top:42px;right:29%;transform:rotate(-14deg);opacity:.85;}
+.hdr-inner{position:relative;z-index:10;}
+.eyebrow{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:5px;text-transform:uppercase;color:var(--blue);background:rgba(255,255,255,.6);display:inline-block;padding:3px 14px;border-radius:20px;margin-bottom:8px;}
+.hdr-inner h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.6rem;letter-spacing:3px;color:var(--dark);}
+.hdr-inner h1 span{color:var(--blue);}
+.hdr-sub{font-size:.9rem;color:#555;font-weight:500;margin-top:6px;}
+.hdr-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+.hbadge{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:4px;color:#fff;}
+.hb-blue{background:var(--blue);} .hb-teal{background:var(--teal);} .hb-dark{background:#000;}
+
+.wrap{max-width:1080px;margin:0 auto;padding:36px 20px 80px;}
+.sec-hdr{background:#000;color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1rem;letter-spacing:6px;text-transform:uppercase;padding:10px 22px;border-radius:6px;margin:40px 0 20px;display:inline-block;}
+
+/* DOW Grid */
+.dow-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px;}
+.dow-card{background:#fff;border-radius:8px;padding:14px 12px;box-shadow:0 2px 8px rgba(0,0,0,.07);text-align:center;}
+.dow-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:.7rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.dow-rev{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1rem;line-height:1;}
+.dow-sub{font-size:.62rem;color:#888;margin-top:4px;line-height:1.4;}
+.dow-bar-wrap{height:4px;background:#F0F0F0;border-radius:2px;margin-top:8px;overflow:hidden;}
+.dow-bar{height:100%;border-radius:2px;}
+
+/* Hour Chart */
+.hour-chart{background:#fff;border-radius:10px;padding:22px 24px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.hour-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.hour-label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.72rem;min-width:52px;text-align:right;color:var(--dark);}
+.hour-bar-wrap{flex:1;height:28px;background:#F5F5F5;border-radius:4px;overflow:hidden;position:relative;}
+.hour-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;transition:width .3s;}
+.hour-val{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.68rem;color:#fff;white-space:nowrap;}
+.hour-count{font-size:.68rem;color:#888;min-width:60px;}
+
+/* 2-col layout */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+
+/* Dwell chart */
+.dwell-chart{background:#fff;border-radius:10px;padding:22px 24px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.dwell-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.dwell-label{font-size:.75rem;font-weight:600;min-width:90px;}
+.dwell-bar-wrap{flex:1;background:#F5F5F5;height:22px;border-radius:4px;overflow:hidden;}
+.dwell-bar{height:100%;border-radius:4px;}
+.dwell-val{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.72rem;min-width:52px;text-align:right;}
+
+/* Pax chart */
+.pax-chart{background:#fff;border-radius:10px;padding:22px 24px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.pax-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.pax-label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.78rem;min-width:70px;}
+.pax-bar-wrap{flex:1;background:#F5F5F5;height:22px;border-radius:4px;overflow:hidden;}
+.pax-bar{height:100%;border-radius:4px;}
+.pax-val{font-size:.7rem;color:#888;min-width:70px;text-align:right;}
+
+/* Insight Cards */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.insight-card{background:#fff;border-radius:10px;padding:18px 20px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.insight-card .ic-icon{font-size:1.6rem;margin-bottom:8px;}
+.insight-card .ic-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:.82rem;color:var(--dark);margin-bottom:6px;}
+.insight-card .ic-body{font-size:.76rem;color:#555;line-height:1.6;}
+.insight-card .ic-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;line-height:1;margin:6px 0;}
+
+/* Presence chart */
+.presence-chart{background:#fff;border-radius:10px;padding:22px 24px;box-shadow:0 2px 10px rgba(0,0,0,.08);}
+.pres-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.pres-label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.72rem;min-width:52px;text-align:right;color:var(--dark);}
+.pres-bar-wrap{flex:1;height:32px;background:#F5F5F5;border-radius:6px;overflow:hidden;position:relative;}
+.pres-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;}
+.pres-val{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.68rem;color:#fff;white-space:nowrap;}
+.pres-side{font-size:.68rem;color:#888;min-width:80px;text-align:right;}
+
+/* Promo section */
+.promo-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.promo-card{background:#fff;border-radius:8px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-left:4px solid var(--red);}
+.promo-name{font-weight:700;font-size:.8rem;margin-bottom:8px;color:var(--dark);line-height:1.4;}
+.promo-qty{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.3rem;color:var(--red);}
+.promo-months{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.pm-chip{font-size:.62rem;padding:2px 7px;border-radius:3px;font-weight:700;}
+
+.foot{text-align:center;margin-top:32px;font-size:.75rem;color:#aaa;font-style:italic;}
+@media(max-width:768px){.dow-grid{grid-template-columns:repeat(4,1fr);}.cols2{grid-template-columns:1fr;}.hdr-inner h1{font-size:1.9rem;}}
+@media(max-width:480px){.dow-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="sh c1"></div><div class="sh c2"></div><div class="sh c3"></div>
+  <div class="sh c4"></div><div class="sh c5"></div>
+  <div class="t1"></div><div class="t2"></div><div class="sq"></div><div class="rc"></div>
+  <div class="hdr-inner">
+    <div class="eyebrow">Management Meeting · มีนาคม 2026</div>
+    <h1>12 <span>PLATO</span></h1>
+    <div class="hdr-sub">MKT Dashboard — Traffic, Behavior & Customer Patterns · Dec 2025 – Feb 2026</div>
+    <div class="hdr-badges">
+      <span class="hbadge hb-blue">Traffic Analysis</span>
+      <span class="hbadge hb-teal">Dwell Time</span>
+      <span class="hbadge hb-dark">2,198 Bills Analyzed</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- KEY INSIGHTS -->
+  <div class="sec-hdr">Key Insights</div>
+  <div class="insight-grid">
+    <div class="insight-card" style="border-left:4px solid var(--blue);">
+      <div class="ic-icon">📅</div>
+      <div class="ic-title">วันที่ดีที่สุด</div>
+      <div class="ic-num" style="color:var(--blue);">ศุกร์</div>
+      <div class="ic-body">฿82,932/วัน เฉลี่ย · สูงกว่าวันจันทร์ <strong>2.6 เท่า</strong></div>
+    </div>
+    <div class="insight-card" style="border-left:4px solid var(--teal);">
+      <div class="ic-icon">🕘</div>
+      <div class="ic-title">Peak Hour</div>
+      <div class="ic-num" style="color:var(--teal);">21:00</div>
+      <div class="ic-body">20.9% ของ traffic ช่วงเย็น · Traffic เริ่มจริงที่ 20:00 ขึ้นไป</div>
+    </div>
+    <div class="insight-card" style="border-left:4px solid var(--amber);">
+      <div class="ic-icon">⏱</div>
+      <div class="ic-title">เวลาเฉลี่ยในร้าน</div>
+      <div class="ic-num" style="color:var(--amber);">123 นาที</div>
+      <div class="ic-body">Median 106 นาที · 43% อยู่เกิน 2 ชั่วโมง</div>
+    </div>
+    <div class="insight-card" style="border-left:4px solid var(--red);">
+      <div class="ic-icon">👥</div>
+      <div class="ic-title">กลุ่มลูกค้าที่มาบ่อยสุด</div>
+      <div class="ic-num" style="color:var(--red);">2 คน</div>
+      <div class="ic-body">44% ของบิลทั้งหมด · คู่รัก / เพื่อนสนิท</div>
+    </div>
+  </div>
+
+  <!-- DAY OF WEEK -->
+  <div class="sec-hdr" style="margin-top:40px;">Revenue by Day of Week</div>
+  <div style="background:#FEF9C3;border-left:4px solid var(--amber);border-radius:6px;padding:10px 16px;margin-bottom:14px;font-size:.77rem;color:#854D0E;">
+    ⚠️ ค่าเป็น <strong>เฉลี่ยต่อวัน</strong> จากจำนวนวันที่เปิดในแต่ละวันของสัปดาห์ ช่วง Dec 2025 – Feb 2026
+  </div>
+  <div class="dow-grid" id="dowGrid"></div>
+
+  <!-- PEAK HOURS -->
+  <div class="sec-hdr">Peak Hour Distribution</div>
+  <div class="hour-chart" id="hourChart"></div>
+
+  <!-- DWELL + PAX -->
+  <div class="sec-hdr">Dwell Time & Group Size</div>
+  <div class="cols2">
+    <div class="dwell-chart">
+      <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:.85rem;color:var(--dark);margin-bottom:4px;">เวลาอยู่ในร้าน — By Day</div>
+      <div style="font-size:.7rem;color:#888;margin-bottom:14px;">ค่าเฉลี่ย (นาที)</div>
+      <div id="dwellByDay"></div>
+    </div>
+    <div class="pax-chart">
+      <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:.85rem;color:var(--dark);margin-bottom:4px;">Group Size Distribution</div>
+      <div style="font-size:.7rem;color:#888;margin-bottom:14px;">จำนวนลูกค้าต่อบิล</div>
+      <div id="paxChart"></div>
+    </div>
+  </div>
+
+  <!-- DWELL BUCKET -->
+  <div class="sec-hdr">Dwell Time Buckets</div>
+  <div class="hour-chart" id="dwellBucket"></div>
+
+  <!-- LATE NIGHT -->
+  <div class="sec-hdr">Late Night Traffic (หลังเที่ยงคืน)</div>
+  <div style="background:#1A1A2E;border-radius:10px;padding:24px 28px;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.2);">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;">
+      <div style="text-align:center;padding:16px;background:rgba(255,255,255,.07);border-radius:8px;">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:var(--amber);">181</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:4px;">บิลหลังเที่ยงคืน</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:rgba(255,255,255,.07);border-radius:8px;">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:var(--teal);">฿446,399</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:4px;">รายได้รวม</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:rgba(255,255,255,.07);border-radius:8px;">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:var(--red);">70%</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:4px;">เสาร์ + อาทิตย์</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:rgba(255,255,255,.07);border-radius:8px;">
+        <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:var(--blue);">฿2,467</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:4px;">เฉลี่ย/บิล (สูงกว่า avg 44%)</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.7;">
+      💡 <strong style="color:var(--amber);">Insight:</strong> ลูกค้า Late Night มี avg bill สูงกว่าค่าเฉลี่ยทั่วไป 44% — กลุ่มนี้ดื่มมากกว่าและอยู่นานกว่า
+      เสาร์ 74 บิล · อาทิตย์ 53 บิล · พฤหัส 24 บิล (unexpected — อาจเป็น Happy Hour extended)
+    </div>
+  </div>
+
+  <!-- CUSTOMER PRESENCE TIMELINE -->
+  <div class="sec-hdr">ลูกค้าในร้าน — Timeline (คาดการณ์จาก Arrival + Dwell)</div>
+  <div style="background:#EFF6FF;border-left:4px solid var(--blue);border-radius:6px;padding:10px 16px;margin-bottom:14px;font-size:.77rem;color:#1D4ED8;">
+    💡 คำนวณจากเวลาชำระเงิน − เวลาอยู่ในร้าน = เวลาเข้าโดยประมาณ · นับจำนวน Pax ที่คาดว่ายังอยู่ในร้านแต่ละชั่วโมง · ช่วง Dec 2025 – Feb 2026 รวมกัน
+  </div>
+  <div class="presence-chart" id="presenceChart"></div>
+
+  <!-- PROMOTION USAGE -->
+  <div class="sec-hdr">การใช้โปรโมชั่น</div>
+  <div style="background:#FEF2F2;border-left:4px solid var(--red);border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:.77rem;color:#991B1B;">
+    📊 รวม <strong>442 รายการโปรโมชั่น</strong> ใน 3 เดือน · Dec: 204 รายการ → Jan: 115 → Feb: 123 (จากหมวด Promotion ใน POS)
+  </div>
+  <div class="promo-cards" id="promoCards"></div>
+
+  <!-- SPH TREND -->
+  <div class="sec-hdr">Spend per Head — Monthly Trend</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+    <div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.08);border-top:4px solid var(--teal);text-align:center;">
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:6px;">Dec 2025</div>
+      <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:var(--teal);">฿735</div>
+      <div style="font-size:.72rem;color:#888;margin-top:4px;">Median ฿605</div>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.08);border-top:4px solid var(--blue);text-align:center;">
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:6px;">Jan 2026</div>
+      <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:var(--blue);">฿735</div>
+      <div style="font-size:.72rem;color:#888;margin-top:4px;">Median ฿638</div>
+      <span style="font-size:.65rem;font-weight:700;background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:3px;">= คงที่</span>
+    </div>
+    <div style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.08);border-top:4px solid var(--amber);text-align:center;">
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:6px;">Feb 2026</div>
+      <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:var(--amber);">฿630</div>
+      <div style="font-size:.72rem;color:#888;margin-top:4px;">Median ฿535</div>
+      <span style="font-size:.65rem;font-weight:700;background:#FEE2E2;color:#991B1B;padding:2px 8px;border-radius:3px;">▼ 14% จาก Jan</span>
+    </div>
+  </div>
+
+  <div class="foot">12 Plato Brewing · MKT Dashboard · ข้อมูล POS FoodStory · Dec 2025 – Feb 2026 · จัดทำเพื่อประชุมภายใน</div>
+</div>
+
+<script>
+// DOW
+const dowData = [
+  {day:'จันทร์', en:'MON', rev:31536, bills:18.0, dwell:109, color:'#9CA3AF'},
+  {day:'อังคาร', en:'TUE', rev:40224, bills:18.0, dwell:110, color:'#6B7280'},
+  {day:'พุธ',    en:'WED', rev:48803, bills:22.0, dwell:121, color:getComputedStyle(document.documentElement).getPropertyValue('--blue').trim()||'#006CB5'},
+  {day:'พฤหัส', en:'THU', rev:48102, bills:24.0, dwell:124, color:'#006CB5'},
+  {day:'ศุกร์',  en:'FRI', rev:82932, bills:31.0, dwell:132, color:'#04818A'},
+  {day:'เสาร์',  en:'SAT', rev:64079, bills:39.0, dwell:122, color:'#ECA800'},
+  {day:'อาทิตย์',en:'SUN', rev:32897, bills:19.0, dwell:135, color:'#DD0008'},
+];
+const maxDow = Math.max(...dowData.map(d=>d.rev));
+const dowGrid = document.getElementById('dowGrid');
+dowData.forEach(d=>{
+  const barW = Math.round(d.rev/maxDow*100);
+  dowGrid.innerHTML+=`
+  <div class="dow-card" style="border-top:4px solid ${d.color}">
+    <div class="dow-name" style="color:${d.color}">${d.en}</div>
+    <div style="font-size:.7rem;color:#888;margin-bottom:4px;">${d.day}</div>
+    <div class="dow-rev" style="color:${d.color}">฿${(d.rev/1000).toFixed(0)}K</div>
+    <div class="dow-sub">${d.bills} บิล/วัน<br>${d.dwell} นาที avg</div>
+    <div class="dow-bar-wrap"><div class="dow-bar" style="width:${barW}%;background:${d.color}"></div></div>
+  </div>`;
+});
+
+// Hours
+const hourData = [
+  {h:'18:00', n:98,  pct:4.5,  rev:94315},
+  {h:'19:00', n:191, pct:8.7,  rev:280885},
+  {h:'20:00', n:313, pct:14.3, rev:625154},
+  {h:'21:00', n:459, pct:20.9, rev:1059205},
+  {h:'22:00', n:417, pct:19.0, rev:861681},
+  {h:'23:00', n:432, pct:19.7, rev:844701},
+  {h:'00:xx', n:181, pct:8.2,  rev:446399},
+];
+const colors = ['#9CA3AF','#6B7280','#006CB5','#04818A','#ECA800','#DD0008','#6B21A8'];
+const maxH = Math.max(...hourData.map(d=>d.n));
+let hHtml = '';
+hourData.forEach((h,i)=>{
+  const barW = Math.round(h.n/maxH*100);
+  hHtml+=`
+  <div class="hour-row">
+    <span class="hour-label">${h.h}</span>
+    <div class="hour-bar-wrap">
+      <div class="hour-bar" style="width:${barW}%;background:${colors[i]}">
+        <span class="hour-val">${h.n} บิล (${h.pct}%)</span>
+      </div>
+    </div>
+    <span class="hour-count">฿${(h.rev/1000).toFixed(0)}K</span>
+  </div>`;
+});
+document.getElementById('hourChart').innerHTML = hHtml;
+
+// Dwell by day
+const dwellDow = [
+  {day:'จันทร์', min:109, color:'#9CA3AF'},
+  {day:'อังคาร', min:110, color:'#6B7280'},
+  {day:'พุธ',    min:121, color:'#006CB5'},
+  {day:'พฤหัส', min:124, color:'#006CB5'},
+  {day:'ศุกร์',  min:132, color:'#04818A'},
+  {day:'เสาร์',  min:122, color:'#ECA800'},
+  {day:'อาทิตย์',min:135, color:'#DD0008'},
+];
+const maxDwell = 135;
+let dHtml='';
+dwellDow.forEach(d=>{
+  const w = Math.round(d.min/maxDwell*100);
+  dHtml+=`
+  <div class="dwell-row">
+    <span class="dwell-label">${d.day}</span>
+    <div class="dwell-bar-wrap"><div class="dwell-bar" style="width:${w}%;background:${d.color}"></div></div>
+    <span class="dwell-val" style="color:${d.color}">${d.min} นาที</span>
+  </div>`;
+});
+document.getElementById('dwellByDay').innerHTML = dHtml;
+
+// Pax
+const paxData = [
+  {pax:'1 คน', n:530, pct:24.1, color:'#9CA3AF'},
+  {pax:'2 คน', n:968, pct:44.1, color:'#04818A'},
+  {pax:'3 คน', n:251, pct:11.4, color:'#006CB5'},
+  {pax:'4 คน', n:196, pct:8.9,  color:'#ECA800'},
+  {pax:'5 คน', n:80,  pct:3.6,  color:'#DD0008'},
+  {pax:'6 คน', n:71,  pct:3.2,  color:'#6B21A8'},
+  {pax:'7+ คน', n:86, pct:3.9,  color:'#374151'},
+];
+const maxPax = 968;
+let pHtml='';
+paxData.forEach(p=>{
+  const w = Math.round(p.n/maxPax*100);
+  pHtml+=`
+  <div class="pax-row">
+    <span class="pax-label">${p.pax}</span>
+    <div class="pax-bar-wrap"><div class="pax-bar" style="width:${w}%;background:${p.color}"></div></div>
+    <span class="pax-val">${p.n} บิล (${p.pct}%)</span>
+  </div>`;
+});
+document.getElementById('paxChart').innerHTML = pHtml;
+
+// Customer Presence Timeline (estimated pax in venue per hour)
+const presenceData = [
+  {h:'16:00', pax:234,  bills:79},
+  {h:'17:00', pax:1021, bills:315},
+  {h:'18:00', pax:2425, bills:744},
+  {h:'19:00', pax:3356, bills:1087},
+  {h:'20:00', pax:3732, bills:1224},
+  {h:'21:00', pax:3612, bills:1205},
+  {h:'22:00', pax:2742, bills:937},
+  {h:'23:00', pax:1672, bills:592},
+  {h:'00:00', pax:558,  bills:182},
+  {h:'01:00', pax:8,    bills:5},
+];
+const presColors = ['#9CA3AF','#6B7280','#006CB5','#006CB5','#04818A','#04818A','#ECA800','#DD0008','#6B21A8','#374151'];
+const maxPres = Math.max(...presenceData.map(p=>p.pax));
+let presHtml = `<div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:.85rem;color:var(--dark);margin-bottom:4px;">จำนวน Pax โดยประมาณที่อยู่ในร้านแต่ละชั่วโมง</div>
+<div style="font-size:.7rem;color:#888;margin-bottom:16px;">รวมทั้งหมด 3 เดือน · คำนวณจาก arrival time estimation</div>`;
+presenceData.forEach((p,i)=>{
+  const barW = Math.round(p.pax/maxPres*100);
+  const isPeak = p.pax === maxPres;
+  presHtml+=`
+  <div class="pres-row">
+    <span class="pres-label">${p.h}</span>
+    <div class="pres-bar-wrap">
+      <div class="pres-bar" style="width:${barW}%;background:${presColors[i]};${isPeak?'background:var(--teal);':''}">
+        <span class="pres-val">${p.pax.toLocaleString()} คน${isPeak?' ← PEAK':''}</span>
+      </div>
+    </div>
+    <span class="pres-side">${p.bills} กลุ่ม</span>
+  </div>`;
+});
+document.getElementById('presenceChart').innerHTML = presHtml;
+
+// Promotion Usage
+const promoData = [
+  {name:"Special Set For Two",      total:150, dec:34, jan:53, feb:63, rev:0,      note:"Bundle ไม่คิดรายการแยก"},
+  {name:"5 Dishes With 4 Beers",    total:137, dec:64, jan:40, feb:33, rev:0,      note:"ยอดลดลงต่อเนื่อง"},
+  {name:"Monday Chicken Night",     total:95,  dec:54, jan:21, feb:20, rev:26050,  note:"฿274/ออเดอร์ เฉลี่ย"},
+  {name:"Pro Line Salted Egg",      total:47,  dec:46, jan:1,  feb:0,  rev:7050,   note:"Dec เท่านั้น — หยุดแล้ว"},
+  {name:"Give Me Five Thai Set",    total:7,   dec:0,  jan:0,  feb:7,  rev:0,      note:"เพิ่งเปิดใน Feb"},
+  {name:"3 Dishes With 2 Beers",    total:6,   dec:6,  jan:0,  feb:0,  rev:0,      note:"Dec เท่านั้น"},
+];
+const promoGrid = document.getElementById('promoCards');
+promoData.forEach(p=>{
+  const revStr = p.rev>0?`<div style="font-size:.7rem;color:var(--teal);font-weight:600;margin-top:2px;">Revenue: ฿${p.rev.toLocaleString()}</div>`:'';
+  promoGrid.innerHTML+=`
+  <div class="promo-card">
+    <div class="promo-name">${p.name}</div>
+    <div class="promo-qty">${p.total} <span style="font-size:.75rem;font-family:'Poppins',sans-serif;font-weight:500;color:#888;">ครั้ง</span></div>
+    ${revStr}
+    <div class="promo-months">
+      <span class="pm-chip" style="background:#EEF2FF;color:#4338CA;">Dec ${p.dec}</span>
+      <span class="pm-chip" style="background:#EFF6FF;color:var(--blue);">Jan ${p.jan}</span>
+      <span class="pm-chip" style="background:#FFFBEB;color:#B45309;">Feb ${p.feb}</span>
+    </div>
+    <div style="font-size:.65rem;color:#9CA3AF;margin-top:8px;font-style:italic;">${p.note}</div>
+  </div>`;
+});
+
+// Dwell Bucket
+const dwellBuckets = [
+  {label:'< 30 นาที',   n:198, pct:9.5,  color:'#EF4444'},
+  {label:'30–60 นาที',  n:277, pct:13.3, color:'#F97316'},
+  {label:'61–90 นาที',  n:399, pct:19.1, color:'#ECA800'},
+  {label:'91–120 นาที', n:311, pct:14.9, color:'#006CB5'},
+  {label:'2–3 ชั่วโมง', n:455, pct:21.8, color:'#04818A'},
+  {label:'> 3 ชั่วโมง', n:444, pct:21.3, color:'#6B21A8'},
+];
+const maxBkt = 455;
+let bHtml='';
+dwellBuckets.forEach(b=>{
+  const w = Math.round(b.n/maxBkt*100);
+  bHtml+=`
+  <div class="hour-row">
+    <span class="hour-label" style="min-width:90px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.72rem;">${b.label}</span>
+    <div class="hour-bar-wrap">
+      <div class="hour-bar" style="width:${w}%;background:${b.color}">
+        <span class="hour-val">${b.n} บิล (${b.pct}%)</span>
+      </div>
+    </div>
+  </div>`;
+});
+document.getElementById('dwellBucket').innerHTML = bHtml;
+</script>
+</body>
+</html>
