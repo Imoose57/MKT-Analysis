@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12 Plato — Customer Behaviour Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--teal:#04818A;--amber:#ECA800;--blue:#006CB5;--red:#DD0008;--beige:#F5EFE6;--cream:#FBF3D9;--dark:#2C2C2C;--green:#2E9B5F;}
+body{font-family:'Poppins',sans-serif;background:var(--beige);color:var(--dark);min-height:100vh;}
+
+/* ── HEADER ── */
+.hdr{position:relative;background:var(--cream);border-bottom:5px solid var(--teal);padding:52px 24px 42px;overflow:hidden;text-align:center;}
+.sh{position:absolute;opacity:.85;}
+.c1{width:76px;height:76px;border-radius:50%;background:var(--teal);top:8px;left:4%;}
+.c2{width:58px;height:58px;border-radius:50%;background:var(--blue);top:14px;right:7%;}
+.c3{width:92px;height:92px;border-radius:50%;background:var(--amber);top:4px;left:14%;}
+.c4{width:62px;height:62px;border-radius:50%;background:var(--red);top:30%;right:4%;}
+.c5{width:72px;height:72px;border-radius:50%;background:var(--teal);bottom:10px;right:11%;}
+.t1{position:absolute;width:0;height:0;border-left:34px solid transparent;border-right:34px solid transparent;border-bottom:60px solid var(--red);top:18px;left:24%;opacity:.85;}
+.t2{position:absolute;width:0;height:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:52px solid var(--amber);bottom:18px;right:24%;transform:rotate(180deg);opacity:.85;}
+.sq{position:absolute;width:62px;height:62px;background:var(--teal);top:26px;left:38%;transform:rotate(15deg);opacity:.85;}
+.rc{position:absolute;width:84px;height:45px;background:var(--blue);top:44px;right:29%;transform:rotate(-14deg);opacity:.85;}
+.hdr-inner{position:relative;z-index:10;}
+.eyebrow{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:5px;text-transform:uppercase;color:var(--teal);background:rgba(255,255,255,.65);display:inline-block;padding:3px 14px;border-radius:20px;margin-bottom:8px;}
+.hdr-inner h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.4rem;letter-spacing:3px;color:var(--dark);}
+.hdr-inner h1 span{color:var(--teal);}
+.hdr-sub{font-size:.88rem;color:#555;font-weight:500;margin-top:6px;}
+.hdr-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+.hbadge{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;padding:5px 13px;border-radius:4px;color:#fff;}
+.hb-teal{background:var(--teal);}.hb-amber{background:var(--amber);color:#000;}.hb-dark{background:#000;}
+
+/* ── WRAPPER ── */
+.wrap{max-width:1120px;margin:0 auto;padding:36px 20px 80px;}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{background:#000;color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:.85rem;letter-spacing:6px;text-transform:uppercase;padding:9px 20px;border-radius:6px;margin:44px 0 6px;display:inline-block;}
+.sec-sub{font-size:.78rem;color:#777;margin-bottom:18px;margin-top:6px;line-height:1.6;}
+.sec-insight{background:#fff;border-left:4px solid var(--teal);padding:10px 16px;border-radius:0 8px 8px 0;font-size:.78rem;color:#444;margin-bottom:18px;line-height:1.6;}
+.sec-insight b{color:var(--teal);}
+.sec-insight.amber{border-left-color:var(--amber);}
+.sec-insight.amber b{color:#b88000;}
+.sec-insight.red{border-left-color:var(--red);}
+.sec-insight.red b{color:var(--red);}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px;}
+@media(min-width:700px){.kpi-row{grid-template-columns:repeat(6,1fr);}}
+.kpi{background:#fff;border-radius:10px;padding:16px 18px;box-shadow:0 2px 8px rgba(0,0,0,.07);border-top:4px solid var(--teal);}
+.kpi.amber{border-top-color:var(--amber);}
+.kpi.blue{border-top-color:var(--blue);}
+.kpi.red{border-top-color:var(--red);}
+.kpi.dark{border-top-color:#000;}
+.kpi-label{font-size:.66rem;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.kpi-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.7rem;line-height:1;color:var(--dark);}
+.kpi-sub{font-size:.68rem;color:#888;margin-top:4px;}
+
+/* ── CHART CARDS ── */
+.card{background:#fff;border-radius:12px;padding:22px 20px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:20px;}
+.card-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:.82rem;letter-spacing:2px;text-transform:uppercase;color:var(--dark);margin-bottom:4px;}
+.card-sub{font-size:.72rem;color:#999;margin-bottom:16px;}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+@media(max-width:680px){.cols2{grid-template-columns:1fr;}}
+.chart-wrap{position:relative;height:300px;}
+.chart-wrap-lg{position:relative;height:340px;}
+.chart-wrap-sm{position:relative;height:240px;}
+
+/* ── HEATMAP ── */
+.heatmap-wrap{overflow-x:auto;}
+.heatmap{display:grid;grid-template-columns:80px repeat(7,1fr);gap:2px;min-width:520px;}
+.hm-cell{padding:7px 4px;border-radius:4px;font-size:.72rem;font-weight:600;text-align:center;line-height:1.2;}
+.hm-head{background:transparent;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.66rem;letter-spacing:1px;text-transform:uppercase;color:#888;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;}
+.hm-row-label{background:transparent;font-weight:700;font-size:.72rem;color:var(--dark);display:flex;align-items:center;padding-right:4px;}
+
+/* ── DWELL BAR COMPARISON ── */
+.dwell-compare{display:grid;gap:12px;}
+.dc-row{display:flex;align-items:center;gap:10px;}
+.dc-label{font-size:.75rem;font-weight:600;width:150px;flex-shrink:0;color:#444;}
+.dc-bar-wrap{flex:1;background:#eee;border-radius:20px;height:22px;overflow:hidden;position:relative;}
+.dc-bar{height:100%;border-radius:20px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;}
+.dc-bar span{font-size:.65rem;font-weight:700;color:#fff;}
+.dc-stats{font-size:.7rem;color:#888;width:110px;flex-shrink:0;text-align:right;}
+
+/* ── LEGEND ── */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:#555;}
+.leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+
+/* ── DATA NOTE ── */
+.note{background:#fff;border-radius:10px;padding:18px 22px;margin-top:40px;font-size:.74rem;color:#888;line-height:1.7;border:1px solid #e8e0d4;}
+.note strong{color:#555;}
+
+/* ── LOYALTY FUNNEL ── */
+.funnel{display:grid;gap:8px;}
+.funnel-row{display:flex;align-items:center;gap:12px;}
+.funnel-label{font-size:.75rem;font-weight:600;color:#444;width:200px;flex-shrink:0;}
+.funnel-bar-wrap{flex:1;background:#eee;border-radius:20px;height:28px;overflow:hidden;}
+.funnel-bar{height:100%;border-radius:20px;display:flex;align-items:center;padding-left:12px;}
+.funnel-bar span{font-size:.7rem;font-weight:700;color:#fff;}
+.funnel-num{font-size:.75rem;font-weight:700;width:60px;text-align:right;flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="hdr">
+  <div class="sh c1"></div><div class="sh c2"></div><div class="sh c3"></div>
+  <div class="sh c4"></div><div class="sh c5"></div>
+  <div class="sh t1"></div><div class="sh t2"></div>
+  <div class="sh sq"></div><div class="sh rc"></div>
+  <div class="hdr-inner">
+    <div class="eyebrow">Customer Behaviour Analysis</div>
+    <h1>12 <span>PLATO</span> BREWING</h1>
+    <p class="hdr-sub">Sep 2025 – Feb 2026 · POS 4,645 bills · CRM 481 active members · Match 754 records</p>
+    <div class="hdr-badges">
+      <span class="hbadge hb-teal">New Members: 481</span>
+      <span class="hbadge hb-amber">Return Visits: 834</span>
+      <span class="hbadge hb-dark">Non-Member Visits: 3,330</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ── KPI CARDS ── -->
+  <div class="kpi-row" style="margin-top:32px;">
+    <div class="kpi">
+      <div class="kpi-label">Total Bills</div>
+      <div class="kpi-val">4,645</div>
+      <div class="kpi-sub">Sep 2025 – Feb 2026</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Avg Dwell (Members)</div>
+      <div class="kpi-val">145m</div>
+      <div class="kpi-sub">2h 25m median</div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-label">Member Bills</div>
+      <div class="kpi-val">16%</div>
+      <div class="kpi-sub">754 / 4,645 bills</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Median Return Gap</div>
+      <div class="kpi-val">30d</div>
+      <div class="kpi-sub">50% กลับใน 1 เดือน</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Single-Visit Members</div>
+      <div class="kpi-val">51%</div>
+      <div class="kpi-sub">245 / 481 คน</div>
+    </div>
+    <div class="kpi dark">
+      <div class="kpi-label">New Member Dwell</div>
+      <div class="kpi-val">162m</div>
+      <div class="kpi-sub">นานกว่า returning!</div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 1: VISITS BY DAY ══ -->
+  <div class="sec-hdr">01 — Visits by Day of Week</div>
+  <p class="sec-sub">แยกตามประเภทลูกค้า: ลูกค้าใหม่ (สมาชิกที่มาครั้งแรก) / ลูกค้าเก่า (สมาชิกที่กลับซ้ำ) / Non-member</p>
+  <div class="sec-insight">
+    <b>ลูกค้าใหม่</b>: ศุกร์ 22% + เสาร์ 19% = 41% มาในสุดสัปดาห์ — Weekend คือ acquisition window หลัก<br>
+    <b>ลูกค้าเก่า</b>: พุธ peak สูงสุด (24%) ตามด้วยศุกร์+เสาร์ — แสดงว่า loyal members มาแม้วันธรรมดา<br>
+    <b>Hypothesis</b>: ควร push retention campaign ในช่วงพฤหัส-ศุกร์ เพื่อ convert weekend visitors ให้กลับซ้ำ
+  </div>
+
+  <div class="card">
+    <div class="card-title">New Member vs Returning Member vs Non-Member — by Day</div>
+    <div class="card-sub">จำนวน bills ต่อวัน แยกตามประเภทลูกค้า</div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div>ลูกค้าใหม่ (First-time Member)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>ลูกค้าเก่า (Returning Member)</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#bbb"></div>Non-Member</div>
+    </div>
+    <div class="chart-wrap-lg"><canvas id="chartByDay"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">สัดส่วน % ลูกค้าใหม่ + เก่า ในแต่ละวัน</div>
+    <div class="card-sub">% member bills ต่อ total bills ต่อวัน (ไม่รวม Non-member)</div>
+    <div class="chart-wrap-sm"><canvas id="chartMemberPct"></canvas></div>
+  </div>
+
+  <!-- ══ SECTION 2: DWELL TIME ══ -->
+  <div class="sec-hdr">02 — Dwell Time: ใหม่ vs เก่า vs Non-Member</div>
+  <p class="sec-sub">เปรียบเทียบเวลานั่งในร้านระหว่างกลุ่มลูกค้า — รวม 4,294 bills ที่มีข้อมูล dwell time</p>
+  <div class="sec-insight amber">
+    <b>Counter-intuitive</b>: ลูกค้าใหม่นั่งนาน<b>ที่สุด</b> (avg 162m) — นานกว่า returning (135m) และ non-member (116m)<br>
+    <b>Hypothesis</b>: คนที่ตัดสินใจสมัคร member ตั้งแต่วันแรกคือ "love at first sight" — มา enjoy เต็มที่เลยตั้งแต่ครั้งแรก<br>
+    <b>Implication</b>: ลูกค้าที่นั่งนาน (>2hr) มีโอกาส convert เป็น member สูง — ควร engage พวกเขา before bill
+  </div>
+
+  <div class="cols2">
+    <div class="card">
+      <div class="card-title">Avg & Median Dwell Time (minutes)</div>
+      <div class="card-sub">เฉลี่ยและค่ากลางของเวลานั่ง</div>
+      <div class="chart-wrap"><canvas id="chartDwellAvg"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Dwell Distribution (%)</div>
+      <div class="card-sub">สัดส่วน &lt;1hr / 1-2hr / &gt;2hr</div>
+      <div class="chart-wrap"><canvas id="chartDwellDist"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 3: AGE × DWELL ══ -->
+  <div class="sec-hdr">03 — Dwell Time by Age Group</div>
+  <p class="sec-sub">เวลานั่งในร้านแยกตามกลุ่มอายุ — จาก 749 matched bills (CRM members ที่มี POS dwell data)</p>
+  <div class="sec-insight">
+    <b>36-45 ปี</b>: อยู่นานที่สุด avg 152m — 63% นั่งมากกว่า 2 ชั่วโมง<br>
+    <b>46-55 ปี</b>: อยู่สั้นกว่ากลุ่มอื่น avg 122m — มา purposeful มากกว่า<br>
+    <b>26-35 ปี</b>: กลุ่มใหญ่สุด (n=334) avg 148m — backbone ของร้าน
+  </div>
+
+  <div class="card">
+    <div class="card-title">Dwell Distribution by Age Group</div>
+    <div class="card-sub">% ของแต่ละช่วงเวลา (&lt;1hr / 1–2hr / &gt;2hr) แยกตามกลุ่มอายุ</div>
+    <div class="chart-wrap"><canvas id="chartAgeDwell"></canvas></div>
+  </div>
+
+  <div class="cols2">
+    <div class="card">
+      <div class="card-title">Avg Dwell (minutes) by Age</div>
+      <div class="card-sub">เวลานั่งเฉลี่ยของแต่ละกลุ่มอายุ</div>
+      <div class="chart-wrap-sm"><canvas id="chartAgeDwellAvg"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Avg Spend (THB) by Age</div>
+      <div class="card-sub">ยอดเฉลี่ยต่อบิลแยกตามกลุ่มอายุ</div>
+      <div class="chart-wrap-sm"><canvas id="chartAgeSpend"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 4: AGE × DAY HEATMAP ══ -->
+  <div class="sec-hdr">04 — Visit Day Heatmap by Age Group</div>
+  <p class="sec-sub">วันที่แต่ละกลุ่มอายุมาบ่อยที่สุด — % ของ visits ในแต่ละวัน</p>
+  <div class="sec-insight amber">
+    <b>36-45 ปี</b>: ศุกร์สูงสุด 24% — เป้าหมายหลักสำหรับ Friday event<br>
+    <b>46-55 ปี</b>: พุธสูงสุด 23% + จันทร์ 15% — midweek regular ตัวจริง, Venus Tuesday ตรงกลุ่มนี้<br>
+    <b>18-25 ปี</b>: อาทิตย์ 29% dominant — pattern ต่างจากกลุ่มอื่น<br>
+    <b>26-35 ปี</b>: กระจายเท่ากัน เสาร์ 21% > ศุกร์ 17% > พุธ 16%
+  </div>
+
+  <div class="card">
+    <div class="card-title">Heatmap — % Visits by Day × Age Group</div>
+    <div class="card-sub">สีเข้ม = สัดส่วนสูง</div>
+    <div class="heatmap-wrap">
+      <div class="heatmap" id="heatmap"></div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 5: RETURN FREQUENCY ══ -->
+  <div class="sec-hdr">05 — Member Return Frequency & Loyalty</div>
+  <p class="sec-sub">ความถี่ในการกลับมาของสมาชิก — วิเคราะห์จาก 833 intervals ระหว่าง consecutive visits</p>
+  <div class="sec-insight red">
+    <b>49% ของสมาชิกกลับมาซ้ำ</b> — 51% เป็น single-visit (โอกาส activation campaign)<br>
+    <b>Median 30 วัน</b> — กลุ่มที่ loyal จะกลับใน 1 เดือน → loyalty window สำคัญ<br>
+    <b>21% กลับใน 7 วัน</b> (สัปดาห์เดียวกัน) — superfans ที่ควร reward<br>
+    <b>12% กลับหลัง 6 เดือน</b> — churn & revive pattern: lost แล้ว trigger กลับมา
+  </div>
+
+  <div class="cols2">
+    <div class="card">
+      <div class="card-title">Return Interval Distribution</div>
+      <div class="card-sub">ช่วงห่างระหว่าง visits ที่เกิดขึ้น 833 ครั้ง</div>
+      <div class="chart-wrap"><canvas id="chartReturnInterval"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Member Loyalty Funnel</div>
+      <div class="card-sub">จาก 481 active members</div>
+      <div style="padding-top:12px;">
+        <div class="funnel">
+          <div class="funnel-row">
+            <div class="funnel-label" style="font-size:.78rem;font-weight:700;color:#333;">Active Members (Sep–Feb)</div>
+            <div class="funnel-bar-wrap">
+              <div class="funnel-bar" style="width:100%;background:var(--blue);">
+                <span>481 คน</span>
+              </div>
+            </div>
+            <div class="funnel-num" style="color:var(--blue);">100%</div>
+          </div>
+          <div class="funnel-row">
+            <div class="funnel-label" style="font-size:.78rem;font-weight:700;color:#333;">กลับซ้ำ ≥1 ครั้ง</div>
+            <div class="funnel-bar-wrap">
+              <div class="funnel-bar" style="width:49%;background:var(--teal);">
+                <span>236 คน</span>
+              </div>
+            </div>
+            <div class="funnel-num" style="color:var(--teal);">49%</div>
+          </div>
+          <div class="funnel-row">
+            <div class="funnel-label" style="font-size:.78rem;font-weight:700;color:#333;">กลับ ≥3 ครั้ง</div>
+            <div class="funnel-bar-wrap">
+              <div class="funnel-bar" style="width:28%;background:var(--amber);">
+                <span></span>
+              </div>
+            </div>
+            <div class="funnel-num" style="color:#b88000;">~28%</div>
+          </div>
+          <div class="funnel-row">
+            <div class="funnel-label" style="font-size:.78rem;font-weight:700;color:#333;">กลับใน 7 วัน (Superfans)</div>
+            <div class="funnel-bar-wrap">
+              <div class="funnel-bar" style="width:15%;background:var(--red);">
+                <span></span>
+              </div>
+            </div>
+            <div class="funnel-num" style="color:var(--red);">~15%</div>
+          </div>
+        </div>
+
+        <div style="margin-top:28px;border-top:1px solid #eee;padding-top:16px;">
+          <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:12px;">Retention Stats</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="background:var(--beige);border-radius:8px;padding:10px 14px;">
+              <div style="font-size:.65rem;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Median Gap</div>
+              <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;color:var(--dark);">30 วัน</div>
+              <div style="font-size:.65rem;color:#888;">50% กลับใน 1 เดือน</div>
+            </div>
+            <div style="background:var(--beige);border-radius:8px;padding:10px 14px;">
+              <div style="font-size:.65rem;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Avg Gap</div>
+              <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;color:var(--dark);">76 วัน</div>
+              <div style="font-size:.65rem;color:#888;">avg ดึงขึ้นโดย long gaps</div>
+            </div>
+            <div style="background:var(--beige);border-radius:8px;padding:10px 14px;">
+              <div style="font-size:.65rem;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:1px;">กลับใน 30 วัน</div>
+              <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;color:var(--teal);">50%</div>
+              <div style="font-size:.65rem;color:#888;">จาก 833 intervals</div>
+            </div>
+            <div style="background:var(--beige);border-radius:8px;padding:10px 14px;">
+              <div style="font-size:.65rem;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:1px;">กลับใน 90 วัน</div>
+              <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;color:var(--amber);">76%</div>
+              <div style="font-size:.65rem;color:#888;">จาก 833 intervals</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DATA NOTES ── -->
+  <div class="note">
+    <strong>Data Sources & Methodology</strong><br>
+    POS: FoodStory Sale Report by Bills Detail (Sep 2025 – Feb 2026) · 4,645 bills · dwell = เวลาที่ชำระเงิน − เวลาเข้า<br>
+    CRM: FoodStory CRM point history · 481 active members (มี transaction ≥ Sep 2025) scraped via SPA navigation<br>
+    Join key: recieptNo (CRM) = หมายเลขใบเสร็จ (POS) · Match rate: 754/1,315 = 57%<br>
+    <strong>Assumptions:</strong> "ลูกค้าใหม่" = สมาชิกที่มีประวัติ first transaction ใน all-time CRM history · Age group = คำนวณจาก birthdate ใน CRM profile<br>
+    <strong>Limitations:</strong> 43% ของ CRM receipts ไม่ match กับ POS ที่มี (น่าจะเป็น bills นอกช่วง Sep–Feb) · Non-member bills ไม่มีข้อมูลอายุหรือ member ID
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── COLORS ──
+const TEAL='#04818A', AMBER='#ECA800', BLUE='#006CB5', RED='#DD0008';
+const TEAL20='rgba(4,129,138,.2)', AMBER20='rgba(236,168,0,.2)', BLUE20='rgba(0,108,181,.2)';
+const DAYS=['จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์','อาทิตย์'];
+
+Chart.defaults.font.family = "'Poppins', sans-serif";
+Chart.defaults.color = '#666';
+
+// ── CHART 1: Visits by Day (Grouped Bar) ──
+new Chart(document.getElementById('chartByDay'),{
+  type:'bar',
+  data:{
+    labels: DAYS,
+    datasets:[
+      {label:'ลูกค้าใหม่ (Member First Visit)',data:[40,26,36,38,65,54,32],backgroundColor:TEAL,borderRadius:4,barPercentage:.85,categoryPercentage:.65},
+      {label:'ลูกค้าเก่า (Member Return)',data:[38,50,100,51,85,83,56],backgroundColor:AMBER,borderRadius:4,barPercentage:.85,categoryPercentage:.65},
+      {label:'Non-Member',data:[318,379,426,574,935,829,430],backgroundColor:'rgba(150,150,150,.35)',borderRadius:4,barPercentage:.85,categoryPercentage:.65}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{boxWidth:12,padding:16,font:{size:11}}},tooltip:{mode:'index',intersect:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:11,weight:'600'}}},
+      y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10}},title:{display:true,text:'จำนวน bills',font:{size:10}}}
+    }
+  }
+});
+
+// ── CHART 1b: Member % by Day ──
+const newD=[40,26,36,38,65,54,32];
+const retD=[38,50,100,51,85,83,56];
+const nonD=[318,379,426,574,935,829,430];
+const totals=DAYS.map((_,i)=>newD[i]+retD[i]+nonD[i]);
+const newPct=newD.map((v,i)=>Math.round(v/totals[i]*100));
+const retPct=retD.map((v,i)=>Math.round(v/totals[i]*100));
+new Chart(document.getElementById('chartMemberPct'),{
+  type:'bar',
+  data:{
+    labels:DAYS,
+    datasets:[
+      {label:'ลูกค้าใหม่ %',data:newPct,backgroundColor:TEAL,borderRadius:4,stack:'s'},
+      {label:'ลูกค้าเก่า %',data:retPct,backgroundColor:AMBER,borderRadius:4,stack:'s'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}%`}}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:11,weight:'600'}}},
+      y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v+'%',font:{size:10}},max:20,
+         title:{display:true,text:'% ของ total bills ในวันนั้น',font:{size:10}}}
+    }
+  }
+});
+
+// ── CHART 2a: Dwell Avg & Median ──
+new Chart(document.getElementById('chartDwellAvg'),{
+  type:'bar',
+  data:{
+    labels:['ลูกค้าใหม่','ลูกค้าเก่า','Non-Member'],
+    datasets:[
+      {label:'Avg (นาที)',data:[162,135,116],backgroundColor:[TEAL,AMBER,BLUE20],borderColor:[TEAL,AMBER,BLUE],borderWidth:2,borderRadius:6},
+      {label:'Median (นาที)',data:[150,120,98],backgroundColor:'transparent',borderColor:['#036d75','#b88000','#004e85'],borderWidth:2,borderRadius:6,type:'bar',barPercentage:.5}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:10,weight:'600'}}},
+      y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v+'m',font:{size:10}},max:200,
+         title:{display:true,text:'นาที',font:{size:10}}}
+    }
+  }
+});
+
+// ── CHART 2b: Dwell Distribution Stacked ──
+new Chart(document.getElementById('chartDwellDist'),{
+  type:'bar',
+  data:{
+    labels:['ลูกค้าใหม่','ลูกค้าเก่า','Non-Member'],
+    datasets:[
+      {label:'<1 ชั่วโมง',data:[4,15,26],backgroundColor:'#e8e8e8',borderRadius:0,stack:'s'},
+      {label:'1–2 ชั่วโมง',data:[30,35,34],backgroundColor:AMBER20,borderColor:AMBER,borderWidth:1,stack:'s'},
+      {label:'>2 ชั่วโมง',data:[66,50,40],backgroundColor:TEAL,borderRadius:0,stack:'s'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}%`}}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:10,weight:'600'}}},
+      y:{max:100,ticks:{callback:v=>v+'%',font:{size:10}},
+         title:{display:true,text:'% ของกลุ่ม',font:{size:10}}}
+    }
+  }
+});
+
+// ── CHART 3: Age × Dwell (Stacked %) ──
+new Chart(document.getElementById('chartAgeDwell'),{
+  type:'bar',
+  data:{
+    labels:['18-25','26-35','36-45','46-55','56+'],
+    datasets:[
+      {label:'<1hr',data:[8,10,10,15,11],backgroundColor:'#e8e8e8',stack:'s'},
+      {label:'1-2hr',data:[46,36,28,38,33],backgroundColor:AMBER20,borderColor:AMBER,borderWidth:1,stack:'s'},
+      {label:'>2hr',data:[46,54,63,47,56],backgroundColor:TEAL,stack:'s'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.x}%`}}},
+    scales:{
+      x:{max:100,ticks:{callback:v=>v+'%',font:{size:10}}},
+      y:{grid:{display:false},ticks:{font:{size:11,weight:'600'}}}
+    }
+  }
+});
+
+// ── CHART 3b: Age Avg Dwell ──
+new Chart(document.getElementById('chartAgeDwellAvg'),{
+  type:'bar',
+  data:{
+    labels:['18-25','26-35','36-45','46-55','56+'],
+    datasets:[{
+      label:'Avg Dwell (นาที)',
+      data:[138,148,152,122,122],
+      backgroundColor:[BLUE,TEAL,TEAL,'rgba(236,168,0,.7)',AMBER20],
+      borderColor:[BLUE,TEAL,TEAL,AMBER,AMBER],
+      borderWidth:2,borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},datalabels:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:10}}},
+      y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v+'m',font:{size:10}},min:80}
+    }
+  }
+});
+
+// ── CHART 3c: Age Avg Spend ──
+new Chart(document.getElementById('chartAgeSpend'),{
+  type:'bar',
+  data:{
+    labels:['18-25','26-35','36-45','46-55','56+'],
+    datasets:[{
+      label:'Avg Spend (฿)',
+      data:[1346,2519,2934,2818,2649],
+      backgroundColor:[BLUE20,TEAL20,'rgba(4,129,138,.8)',AMBER,'rgba(236,168,0,.5)'],
+      borderColor:[BLUE,TEAL,TEAL,AMBER,AMBER],
+      borderWidth:2,borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:10}}},
+      y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>'฿'+v.toLocaleString(),font:{size:9}},min:0}
+    }
+  }
+});
+
+// ── CHART 5: Return Interval ──
+new Chart(document.getElementById('chartReturnInterval'),{
+  type:'bar',
+  data:{
+    labels:['≤7d\n(21%)','8-14d\n(12%)','15-30d\n(17%)','31-60d\n(17%)','61-90d\n(9%)','91-180d\n(12%)','>180d\n(12%)'],
+    datasets:[{
+      label:'จำนวน intervals',
+      data:[174,103,143,140,72,100,101],
+      backgroundColor:[
+        'rgba(4,129,138,.9)','rgba(4,129,138,.75)','rgba(4,129,138,.6)',
+        'rgba(236,168,0,.8)','rgba(236,168,0,.6)',
+        'rgba(0,108,181,.6)','rgba(221,0,8,.5)'
+      ],
+      borderRadius:6
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      annotation:{annotations:{line1:{type:'line',xMin:2.5,xMax:2.5,borderColor:'#999',borderWidth:1,borderDash:[4,4],label:{content:'Median 30d',enabled:true,position:'start',font:{size:9}}}}}},
+    scales:{
+      x:{grid:{display:false},ticks:{font:{size:9.5},maxRotation:0}},
+      y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10}},
+         title:{display:true,text:'จำนวน intervals',font:{size:10}}}
+    }
+  }
+});
+
+// ── HEATMAP ──
+const hmData={
+  '<18':    [11,11,11,33,22,11,0],
+  '18-25':  [0,17,21,8,17,8,29],
+  '26-35':  [8,9,16,15,17,21,15],
+  '36-45':  [13,11,19,10,24,17,6],
+  '46-55':  [15,12,23,10,17,13,10],
+  '56+':    [6,6,6,0,39,28,17]
+};
+const hmEl = document.getElementById('heatmap');
+// Header row
+const dayLabels=['','จ','อ','พ','พฤ','ศ','ส','อา'];
+dayLabels.forEach((d,i)=>{
+  const el=document.createElement('div');
+  el.className='hm-head'; el.textContent=d; hmEl.appendChild(el);
+});
+// Data rows
+Object.entries(hmData).forEach(([age,vals])=>{
+  const lbl=document.createElement('div');
+  lbl.className='hm-row-label'; lbl.textContent=age; hmEl.appendChild(lbl);
+  vals.forEach(v=>{
+    const cell=document.createElement('div');
+    cell.className='hm-cell';
+    const alpha=v/42;
+    const bg=v>=25?`rgba(4,129,138,${0.3+alpha*0.8})`:v>=15?`rgba(236,168,0,${0.3+alpha*0.9})`:v>=8?`rgba(0,108,181,${0.25+alpha*0.7})`:'rgba(200,200,200,0.2)';
+    const color=v>=20?'#fff':v>=10?'#333':'#aaa';
+    cell.style.cssText=`background:${bg};color:${color};`;
+    cell.textContent=v+'%'; hmEl.appendChild(cell);
+  });
+});
+</script>
+</body>
+</html>
